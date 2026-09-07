@@ -1,13 +1,13 @@
 # Russian
 
 
-### Alfabet
+### Alphabet
 
 ##### Same pronunciation as english
-- A f**a**rher
+- A f**a**ther
 - K **k**ind
-- M **men**
-- O **old**
+- M **m**en
+- O **o**ld
 - T **t**ake
 
 ##### English characters but different sounds
