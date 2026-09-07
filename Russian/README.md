@@ -74,3 +74,34 @@ There are 6 consonant exceptions that are always hard or soft (ignoring the vowe
 - Ч
 - Щ
 - Й
+
+------  
+  
+### 2. Greetings
+
+- Привет (Hello, only for friends and known people) (Its pronounced as in **Pre**view, **v**et, **Yet**) (prevyet).  
+- Здравствуйте (Hello, for strangers, older people, or formal situations) (Its pronounced as in **Z**oo, **dr**ive, f**a**ther, **st**op, **v**et, **w**e, s**ee**, **t**ea, **ye**t) (zdrahst-vwee-tye).   
+  
+In the present tense there is no verb **to be**. For example if someone asks your name, in Russia you would say the equivalent to "I Alex". In Russian is "Я Алекс".  
+
+- Очень приятно (Nice to meet you) (Its pronounced as in g**o**, **ch**eese, y**e**t, **n**et, **pre**view, **ya**rd, s**t**op, **n**et, **a**bout) (oh-chen pree-yat-na)
+
+> Note: In Russian, vowels that are not emphasized change sound.  
+> - O (not emphasized) sounds like "a"  
+> - E (not emphasized) sounds like "i" (as in "it")
+> - Я (not emphasized) sounds like "i" (as in "it")
+>
+> That's why the second part of "Очень" is pronounced "chin" instead of "chen".
+>
+> And that's why the final O in "приятно" is pronounced "a": (not "pree-yat-no").
+
+
+
+
+
+
+
+
+
+
+
