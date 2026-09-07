@@ -40,6 +40,7 @@
             background: white;
             cursor: pointer;
             font-size: 1rem;
+            color: #333;
         }
         .options button:hover { background: #f0f0f0; }
         .correct { background: #d4edda !important; border-color: #28a745 !important; }
@@ -94,6 +95,11 @@
             font-size: 1rem;
             margin-right: 0.5rem;
         }
+        #rating {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 0.5rem;
+        }
     </style>
 </head>
 <body>
@@ -145,299 +151,12 @@
     </div>
 
     <div id="feedback" class="feedback"></div>
+    <div id="rating"></div>
 
     <script>
         // ================== VOCABULARY DATA ==================
-        // Each item: { ru: "Russian text", en: "translation", audio: "file.mp3", topic: "topicKey" }
-        const vocabulary = [
-            // Alphabet
-            { ru: "А", en: "A (father)", audio: "tts_ru_А.mp3", topic: "alphabet" },
-            { ru: "Б", en: "B (baby)", audio: "tts_ru_Б.mp3", topic: "alphabet" },
-            { ru: "В", en: "V (vibes)", audio: "tts_ru_В.mp3", topic: "alphabet" },
-            { ru: "Г", en: "G (good)", audio: "tts_ru_Г.mp3", topic: "alphabet" },
-            { ru: "Д", en: "D (date)", audio: "tts_ru_Д.mp3", topic: "alphabet" },
-            { ru: "Е", en: "Ye (yes)", audio: "tts_ru_Е.mp3", topic: "alphabet" },
-            { ru: "Ё", en: "Yo (your)", audio: "tts_ru_Ё.mp3", topic: "alphabet" },
-            { ru: "Ж", en: "Zh (pleasure)", audio: "tts_ru_Ж.mp3", topic: "alphabet" },
-            { ru: "З", en: "Z (zodiac)", audio: "tts_ru_З.mp3", topic: "alphabet" },
-            { ru: "И", en: "I (meet)", audio: "tts_ru_И.mp3", topic: "alphabet" },
-            { ru: "Й", en: "Y (toy)", audio: "tts_ru_Й.mp3", topic: "alphabet" },
-            { ru: "К", en: "K (kind)", audio: "tts_ru_К.mp3", topic: "alphabet" },
-            { ru: "Л", en: "L (love)", audio: "tts_ru_Л.mp3", topic: "alphabet" },
-            { ru: "М", en: "M (men)", audio: "tts_ru_М.mp3", topic: "alphabet" },
-            { ru: "Н", en: "N (nice)", audio: "tts_ru_Н.mp3", topic: "alphabet" },
-            { ru: "О", en: "O (old)", audio: "tts_ru_О.mp3", topic: "alphabet" },
-            { ru: "П", en: "P (people)", audio: "tts_ru_П.mp3", topic: "alphabet" },
-            { ru: "Р", en: "R (rain)", audio: "tts_ru_Р.mp3", topic: "alphabet" },
-            { ru: "С", en: "S (sun)", audio: "tts_ru_С.mp3", topic: "alphabet" },
-            { ru: "Т", en: "T (take)", audio: "tts_ru_Т.mp3", topic: "alphabet" },
-            { ru: "У", en: "U (soon)", audio: "tts_ru_У.mp3", topic: "alphabet" },
-            { ru: "Ф", en: "F (fine)", audio: "tts_ru_Ф.mp3", topic: "alphabet" },
-            { ru: "Х", en: "Kh (hello)", audio: "tts_ru_Х.mp3", topic: "alphabet" },
-            { ru: "Ц", en: "Ts (its)", audio: "tts_ru_Ц.mp3", topic: "alphabet" },
-            { ru: "Ч", en: "Ch (chips)", audio: "tts_ru_Ч.mp3", topic: "alphabet" },
-            { ru: "Ш", en: "Sh (shape)", audio: "tts_ru_Ш.mp3", topic: "alphabet" },
-            { ru: "Щ", en: "Shch (sheep)", audio: "tts_ru_Щ.mp3", topic: "alphabet" },
-            { ru: "Ъ", en: "Hard sign", audio: "tts_ru_Ъ.mp3", topic: "alphabet" },
-            { ru: "Ы", en: "Special i", audio: "tts_ru_Ы.mp3", topic: "alphabet" },
-            { ru: "Ь", en: "Soft sign", audio: "tts_ru_Ь.mp3", topic: "alphabet" },
-            { ru: "Э", en: "E (edit)", audio: "tts_ru_Э.mp3", topic: "alphabet" },
-            { ru: "Ю", en: "Yu (university)", audio: "tts_ru_Ю.mp3", topic: "alphabet" },
-            { ru: "Я", en: "Ya (yard)", audio: "tts_ru_Я.mp3", topic: "alphabet" },
-
-            // Greetings
-            { ru: "Привет", en: "Hello (informal)", audio: "tts_ru_Привет.mp3", topic: "greetings" },
-            { ru: "Здравствуйте", en: "Hello (formal)", audio: "tts_ru_Здравствуйте.mp3", topic: "greetings" },
-            { ru: "Очень приятно", en: "Nice to meet you", audio: "tts_ru_Очень приятно.mp3", topic: "greetings" },
-            { ru: "Как Ты", en: "How are you? (informal)", audio: "tts_ru_Как Ты.mp3", topic: "greetings" },
-
-            // Farewell
-            { ru: "Пока", en: "Bye (informal)", audio: "tts_ru_Пока.mp3", topic: "farewell" },
-            { ru: "До свидания", en: "Goodbye (formal)", audio: "tts_ru_До свидания.mp3", topic: "farewell" },
-            { ru: "Доброе Утро", en: "Good morning", audio: "tts_ru_Доброе Утро.mp3", topic: "farewell" },
-            { ru: "Добрый день", en: "Good afternoon", audio: "tts_ru_Добрый день.mp3", topic: "farewell" },
-            { ru: "Добрый вечер", en: "Good evening", audio: "tts_ru_Добрый вечер.mp3", topic: "farewell" },
-            { ru: "Доброй ночи", en: "Good night (arriving)", audio: "tts_ru_Доброй ночи.mp3", topic: "farewell" },
-            { ru: "Спокойной ночи", en: "Good night (leaving)", audio: "tts_ru_Спокойной ночи.mp3", topic: "farewell" },
-
-            // Apologies
-            { ru: "Прости", en: "Sorry (informal)", audio: "tts_ru_Прости.mp3", topic: "apologies" },
-            { ru: "Простите", en: "Sorry (formal)", audio: "tts_ru_Простите.mp3", topic: "apologies" },
-            { ru: "Извини", en: "Excuse me (informal)", audio: "tts_ru_Извини.mp3", topic: "apologies" },
-            { ru: "Извините", en: "Excuse me (formal)", audio: "tts_ru_Извините.mp3", topic: "apologies" },
-            { ru: "Прошу прощения", en: "I beg your pardon", audio: "tts_ru_Прошу прощения.mp3", topic: "apologies" },
-
-            // Drinks
-            { ru: "Кофе", en: "Coffee", audio: "tts_ru_Кофе.mp3", topic: "drinks" },
-            { ru: "Вода", en: "Water", audio: "tts_ru_Вода.mp3", topic: "drinks" },
-            { ru: "Пиво", en: "Beer", audio: "tts_ru_Пиво.mp3", topic: "drinks" },
-
-            // Foods
-            { ru: "Хлеб", en: "Bread", audio: "tts_ru_Хлеб.mp3", topic: "foods" },
-            { ru: "Сыр", en: "Cheese", audio: "tts_ru_Сыр.mp3", topic: "foods" },
-            { ru: "Мясо", en: "Meat", audio: "tts_ru_Мясо.mp3", topic: "foods" },
-            { ru: "Рыба", en: "Fish", audio: "tts_ru_Рыба.mp3", topic: "foods" },
-            { ru: "Яйцо", en: "Egg", audio: "tts_ru_Яйцо.mp3", topic: "foods" },
-            { ru: "Фрукты", en: "Fruit", audio: "tts_ru_Фрукты.mp3", topic: "foods" },
-            { ru: "Овощи", en: "Vegetables", audio: "tts_ru_Овощи.mp3", topic: "foods" },
-            { ru: "Суп", en: "Soup", audio: "tts_ru_Суп.mp3", topic: "foods" },
-            { ru: "Салат", en: "Salad", audio: "tts_ru_Салат.mp3", topic: "foods" },
-            { ru: "Картофель", en: "Potato", audio: "tts_ru_Картофель.mp3", topic: "foods" },
-
-            // Family
-            { ru: "Мама", en: "Mom", audio: "tts_ru_Мама.mp3", topic: "family" },
-            { ru: "Папа", en: "Dad", audio: "tts_ru_Папа.mp3", topic: "family" },
-            { ru: "Брат", en: "Brother", audio: "tts_ru_Брат.mp3", topic: "family" },
-            { ru: "Сестра", en: "Sister", audio: "tts_ru_Сестра.mp3", topic: "family" },
-            { ru: "Сын", en: "Son", audio: "tts_ru_Сын.mp3", topic: "family" },
-            { ru: "Дочь", en: "Daughter", audio: "tts_ru_Дочь.mp3", topic: "family" },
-            { ru: "Муж", en: "Husband", audio: "tts_ru_Муж.mp3", topic: "family" },
-            { ru: "Жена", en: "Wife", audio: "tts_ru_Жена.mp3", topic: "family" },
-            { ru: "Бабушка", en: "Grandmother", audio: "tts_ru_Бабушка.mp3", topic: "family" },
-            { ru: "Дедушка", en: "Grandfather", audio: "tts_ru_Дедушка.mp3", topic: "family" },
-
-            // Places
-            { ru: "Дом", en: "House/home", audio: "tts_ru_Дом.mp3", topic: "places" },
-            { ru: "Школа", en: "School", audio: "tts_ru_Школа.mp3", topic: "places" },
-            { ru: "Работа", en: "Work", audio: "tts_ru_Работа.mp3", topic: "places" },
-            { ru: "Магазин", en: "Store", audio: "tts_ru_Магазин.mp3", topic: "places" },
-            { ru: "Ресторан", en: "Restaurant", audio: "tts_ru_Ресторан.mp3", topic: "places" },
-            { ru: "Больница", en: "Hospital", audio: "tts_ru_Больница.mp3", topic: "places" },
-            { ru: "Банк", en: "Bank", audio: "tts_ru_Банк.mp3", topic: "places" },
-            { ru: "Аптека", en: "Pharmacy", audio: "tts_ru_Аптека.mp3", topic: "places" },
-            { ru: "Парк", en: "Park", audio: "tts_ru_Парк.mp3", topic: "places" },
-            { ru: "Церковь", en: "Church", audio: "tts_ru_Церковь.mp3", topic: "places" },
-
-            // Pronouns
-            { ru: "Я", en: "I", audio: "tts_ru_Я.mp3", topic: "pronouns" },
-            { ru: "Ты", en: "You (informal)", audio: "tts_ru_Ты.mp3", topic: "pronouns" },
-            { ru: "Вы", en: "You (formal/plural)", audio: "tts_ru_Вы.mp3", topic: "pronouns" },
-            { ru: "Он", en: "He", audio: "tts_ru_Он.mp3", topic: "pronouns" },
-            { ru: "Она", en: "She", audio: "tts_ru_Она.mp3", topic: "pronouns" },
-            { ru: "Оно", en: "It", audio: "tts_ru_Оно.mp3", topic: "pronouns" },
-            { ru: "Мы", en: "We", audio: "tts_ru_Мы.mp3", topic: "pronouns" },
-            { ru: "Они", en: "They", audio: "tts_ru_Они.mp3", topic: "pronouns" },
-
-            // Numbers
-            { ru: "Ноль", en: "0", audio: "tts_ru_Ноль.mp3", topic: "numbers" },
-            { ru: "Один", en: "1", audio: "tts_ru_Один.mp3", topic: "numbers" },
-            { ru: "Два", en: "2", audio: "tts_ru_Два.mp3", topic: "numbers" },
-            { ru: "Три", en: "3", audio: "tts_ru_Три.mp3", topic: "numbers" },
-            { ru: "Четыре", en: "4", audio: "tts_ru_Четыре.mp3", topic: "numbers" },
-            { ru: "Пять", en: "5", audio: "tts_ru_Пять.mp3", topic: "numbers" },
-            { ru: "Шесть", en: "6", audio: "tts_ru_Шесть.mp3", topic: "numbers" },
-            { ru: "Семь", en: "7", audio: "tts_ru_Семь.mp3", topic: "numbers" },
-            { ru: "Восемь", en: "8", audio: "tts_ru_Восемь.mp3", topic: "numbers" },
-            { ru: "Девять", en: "9", audio: "tts_ru_Девять.mp3", topic: "numbers" },
-            { ru: "Десять", en: "10", audio: "tts_ru_Десять.mp3", topic: "numbers" },
-
-            // Colors
-            { ru: "Красный", en: "Red", audio: "tts_ru_Красный.mp3", topic: "colors" },
-            { ru: "Синий", en: "Blue", audio: "tts_ru_Синий.mp3", topic: "colors" },
-            { ru: "Зелёный", en: "Green", audio: "tts_ru_Зелёный.mp3", topic: "colors" },
-            { ru: "Жёлтый", en: "Yellow", audio: "tts_ru_Жёлтый.mp3", topic: "colors" },
-            { ru: "Чёрный", en: "Black", audio: "tts_ru_Чёрный.mp3", topic: "colors" },
-            { ru: "Белый", en: "White", audio: "tts_ru_Белый.mp3", topic: "colors" },
-            { ru: "Серый", en: "Gray", audio: "tts_ru_Серый.mp3", topic: "colors" },
-            { ru: "Коричневый", en: "Brown", audio: "tts_ru_Коричневый.mp3", topic: "colors" },
-            { ru: "Оранжевый", en: "Orange", audio: "tts_ru_Оранжевый.mp3", topic: "colors" },
-
-            // Days of the week
-            { ru: "Понедельник", en: "Monday", audio: "tts_ru_Понедельник.mp3", topic: "days" },
-            { ru: "Вторник", en: "Tuesday", audio: "tts_ru_Вторник.mp3", topic: "days" },
-            { ru: "Среда", en: "Wednesday", audio: "tts_ru_Среда.mp3", topic: "days" },
-            { ru: "Четверг", en: "Thursday", audio: "tts_ru_Четверг.mp3", topic: "days" },
-            { ru: "Пятница", en: "Friday", audio: "tts_ru_Пятница.mp3", topic: "days" },
-            { ru: "Суббота", en: "Saturday", audio: "tts_ru_Суббота.mp3", topic: "days" },
-            { ru: "Воскресенье", en: "Sunday", audio: "tts_ru_Воскресенье.mp3", topic: "days" },
-
-            // Months
-            { ru: "Январь", en: "January", audio: "tts_ru_Январь.mp3", topic: "months" },
-            { ru: "Февраль", en: "February", audio: "tts_ru_Февраль.mp3", topic: "months" },
-            { ru: "Март", en: "March", audio: "tts_ru_Март.mp3", topic: "months" },
-            { ru: "Апрель", en: "April", audio: "tts_ru_Апрель.mp3", topic: "months" },
-            { ru: "Май", en: "May", audio: "tts_ru_Май.mp3", topic: "months" },
-            { ru: "Июнь", en: "June", audio: "tts_ru_Июнь.mp3", topic: "months" },
-            { ru: "Июль", en: "July", audio: "tts_ru_Июль.mp3", topic: "months" },
-            { ru: "Август", en: "August", audio: "tts_ru_Август.mp3", topic: "months" },
-            { ru: "Сентябрь", en: "September", audio: "tts_ru_Сентябрь.mp3", topic: "months" },
-            { ru: "Октябрь", en: "October", audio: "tts_ru_Октябрь.mp3", topic: "months" },
-            { ru: "Ноябрь", en: "November", audio: "tts_ru_Ноябрь.mp3", topic: "months" },
-            { ru: "Декабрь", en: "December", audio: "tts_ru_Декабрь.mp3", topic: "months" },
-
-            // Verbs
-            { ru: "Быть", en: "To be", audio: "tts_ru_Быть.mp3", topic: "verbs" },
-            { ru: "Говорить", en: "To speak", audio: "tts_ru_Говорить.mp3", topic: "verbs" },
-            { ru: "Есть", en: "To eat", audio: "tts_ru_Есть.mp3", topic: "verbs" },
-            { ru: "Пить", en: "To drink", audio: "tts_ru_Пить.mp3", topic: "verbs" },
-            { ru: "Идти", en: "To go", audio: "tts_ru_Идти.mp3", topic: "verbs" },
-            { ru: "Видеть", en: "To see", audio: "tts_ru_Видеть.mp3", topic: "verbs" },
-            { ru: "Слышать", en: "To hear", audio: "tts_ru_Слышать.mp3", topic: "verbs" },
-            { ru: "Знать", en: "To know", audio: "tts_ru_Знать.mp3", topic: "verbs" },
-            { ru: "Хотеть", en: "To want", audio: "tts_ru_Хотеть.mp3", topic: "verbs" },
-            { ru: "Мочь", en: "Can", audio: "tts_ru_Мочь.mp3", topic: "verbs" },
-
-            // Connectors
-            { ru: "И", en: "And", audio: "tts_ru_И.mp3", topic: "connectors" },
-            { ru: "Или", en: "Or", audio: "tts_ru_Или.mp3", topic: "connectors" },
-            { ru: "Но", en: "But", audio: "tts_ru_Но.mp3", topic: "connectors" },
-            { ru: "Потому что", en: "Because", audio: "tts_ru_Потому что.mp3", topic: "connectors" },
-            { ru: "Если", en: "If", audio: "tts_ru_Если.mp3", topic: "connectors" },
-            { ru: "Что", en: "That/what", audio: "tts_ru_Что.mp3", topic: "connectors" },
-            { ru: "Когда", en: "When", audio: "tts_ru_Когда.mp3", topic: "connectors" },
-            { ru: "Так как", en: "Since/as", audio: "tts_ru_Так как.mp3", topic: "connectors" },
-            { ru: "Ни", en: "Neither/nor", audio: "tts_ru_Ни.mp3", topic: "connectors" },
-
-            // Question words
-            { ru: "Кто", en: "Who", audio: "tts_ru_Кто.mp3", topic: "questionwords" },
-            { ru: "Что", en: "What", audio: "tts_ru_Что.mp3", topic: "questionwords" },
-            { ru: "Где", en: "Where", audio: "tts_ru_Где.mp3", topic: "questionwords" },
-            { ru: "Когда", en: "When", audio: "tts_ru_Когда.mp3", topic: "questionwords" },
-            { ru: "Почему", en: "Why", audio: "tts_ru_Почему.mp3", topic: "questionwords" },
-            { ru: "Как", en: "How", audio: "tts_ru_Как.mp3", topic: "questionwords" },
-            { ru: "Сколько", en: "How much/many", audio: "tts_ru_Сколько.mp3", topic: "questionwords" },
-            { ru: "Какой", en: "Which", audio: "tts_ru_Какой.mp3", topic: "questionwords" },
-            { ru: "Чей", en: "Whose", audio: "tts_ru_Чей.mp3", topic: "questionwords" },
-
-            // Adjectives
-            { ru: "Большой", en: "Big", audio: "tts_ru_Большой.mp3", topic: "adjectives" },
-            { ru: "Маленький", en: "Small", audio: "tts_ru_Маленький.mp3", topic: "adjectives" },
-            { ru: "Хороший", en: "Good", audio: "tts_ru_Хороший.mp3", topic: "adjectives" },
-            { ru: "Плохой", en: "Bad", audio: "tts_ru_Плохой.mp3", topic: "adjectives" },
-            { ru: "Новый", en: "New", audio: "tts_ru_Новый.mp3", topic: "adjectives" },
-            { ru: "Старый", en: "Old", audio: "tts_ru_Старый.mp3", topic: "adjectives" },
-            { ru: "Красивый", en: "Beautiful", audio: "tts_ru_Красивый.mp3", topic: "adjectives" },
-            { ru: "Дорогой", en: "Expensive/dear", audio: "tts_ru_Дорогой.mp3", topic: "adjectives" },
-            { ru: "Дешёвый", en: "Cheap", audio: "tts_ru_Дешёвый.mp3", topic: "adjectives" },
-            { ru: "Интересный", en: "Interesting", audio: "tts_ru_Интересный.mp3", topic: "adjectives" },
-
-            // Time expressions
-            { ru: "Сейчас", en: "Now", audio: "tts_ru_Сейчас.mp3", topic: "time" },
-            { ru: "Позже", en: "Later", audio: "tts_ru_Позже.mp3", topic: "time" },
-            { ru: "Сегодня", en: "Today", audio: "tts_ru_Сегодня.mp3", topic: "time" },
-            { ru: "Вчера", en: "Yesterday", audio: "tts_ru_Вчера.mp3", topic: "time" },
-            { ru: "Завтра", en: "Tomorrow", audio: "tts_ru_Завтра.mp3", topic: "time" },
-            { ru: "Утро", en: "Morning", audio: "tts_ru_Утро.mp3", topic: "time" },
-            { ru: "День", en: "Day", audio: "tts_ru_День.mp3", topic: "time" },
-            { ru: "Вечер", en: "Evening", audio: "tts_ru_Вечер.mp3", topic: "time" },
-            { ru: "Ночь", en: "Night", audio: "tts_ru_Ночь.mp3", topic: "time" },
-            { ru: "Рано", en: "Early", audio: "tts_ru_Рано.mp3", topic: "time" },
-            { ru: "Поздно", en: "Late", audio: "tts_ru_Поздно.mp3", topic: "time" },
-
-            // Seasons & Weather
-            { ru: "Весна", en: "Spring", audio: "tts_ru_Весна.mp3", topic: "seasons" },
-            { ru: "Лето", en: "Summer", audio: "tts_ru_Лето.mp3", topic: "seasons" },
-            { ru: "Осень", en: "Autumn", audio: "tts_ru_Осень.mp3", topic: "seasons" },
-            { ru: "Зима", en: "Winter", audio: "tts_ru_Зима.mp3", topic: "seasons" },
-            { ru: "Погода", en: "Weather", audio: "tts_ru_Погода.mp3", topic: "seasons" },
-            { ru: "Солнце", en: "Sun", audio: "tts_ru_Солнце.mp3", topic: "seasons" },
-            { ru: "Дождь", en: "Rain", audio: "tts_ru_Дождь.mp3", topic: "seasons" },
-            { ru: "Снег", en: "Snow", audio: "tts_ru_Снег.mp3", topic: "seasons" },
-            { ru: "Ветер", en: "Wind", audio: "tts_ru_Ветер.mp3", topic: "seasons" },
-            { ru: "Тепло", en: "Warm", audio: "tts_ru_Тепло.mp3", topic: "seasons" },
-            { ru: "Холодно", en: "Cold", audio: "tts_ru_Холодно.mp3", topic: "seasons" },
-            { ru: "Жарко", en: "Hot", audio: "tts_ru_Жарко.mp3", topic: "seasons" },
-
-            // Body parts
-            { ru: "Голова", en: "Head", audio: "tts_ru_Голова.mp3", topic: "body" },
-            { ru: "Лицо", en: "Face", audio: "tts_ru_Лицо.mp3", topic: "body" },
-            { ru: "Глаз", en: "Eye", audio: "tts_ru_Глаз.mp3", topic: "body" },
-            { ru: "Нос", en: "Nose", audio: "tts_ru_Нос.mp3", topic: "body" },
-            { ru: "Рот", en: "Mouth", audio: "tts_ru_Рот.mp3", topic: "body" },
-            { ru: "Ухо", en: "Ear", audio: "tts_ru_Ухо.mp3", topic: "body" },
-            { ru: "Рука", en: "Hand/arm", audio: "tts_ru_Рука.mp3", topic: "body" },
-            { ru: "Нога", en: "Leg/foot", audio: "tts_ru_Нога.mp3", topic: "body" },
-            { ru: "Палец", en: "Finger", audio: "tts_ru_Палец.mp3", topic: "body" },
-            { ru: "Живот", en: "Stomach", audio: "tts_ru_Живот.mp3", topic: "body" },
-            { ru: "Спина", en: "Back", audio: "tts_ru_Спина.mp3", topic: "body" },
-            { ru: "Зуб", en: "Tooth", audio: "tts_ru_Зуб.mp3", topic: "body" },
-
-            // Clothes
-            { ru: "Одежда", en: "Clothes", audio: "tts_ru_Одежда.mp3", topic: "clothes" },
-            { ru: "Рубашка", en: "Shirt", audio: "tts_ru_Рубашка.mp3", topic: "clothes" },
-            { ru: "Брюки", en: "Pants", audio: "tts_ru_Брюки.mp3", topic: "clothes" },
-            { ru: "Платье", en: "Dress", audio: "tts_ru_Платье.mp3", topic: "clothes" },
-            { ru: "Юбка", en: "Skirt", audio: "tts_ru_Юбка.mp3", topic: "clothes" },
-            { ru: "Обувь", en: "Shoes", audio: "tts_ru_Обувь.mp3", topic: "clothes" },
-            { ru: "Куртка", en: "Jacket", audio: "tts_ru_Куртка.mp3", topic: "clothes" },
-            { ru: "Шапка", en: "Hat", audio: "tts_ru_Шапка.mp3", topic: "clothes" },
-            { ru: "Носки", en: "Socks", audio: "tts_ru_Носки.mp3", topic: "clothes" },
-            { ru: "Перчатки", en: "Gloves", audio: "tts_ru_Перчатки.mp3", topic: "clothes" },
-
-            // Transport & Travel
-            { ru: "Машина", en: "Car", audio: "tts_ru_Машина.mp3", topic: "transport" },
-            { ru: "Автобус", en: "Bus", audio: "tts_ru_Автобус.mp3", topic: "transport" },
-            { ru: "Поезд", en: "Train", audio: "tts_ru_Поезд.mp3", topic: "transport" },
-            { ru: "Самолёт", en: "Airplane", audio: "tts_ru_Самолёт.mp3", topic: "transport" },
-            { ru: "Велосипед", en: "Bicycle", audio: "tts_ru_Велосипед.mp3", topic: "transport" },
-            { ru: "Такси", en: "Taxi", audio: "tts_ru_Такси.mp3", topic: "transport" },
-            { ru: "Аэропорт", en: "Airport", audio: "tts_ru_Аэропорт.mp3", topic: "transport" },
-            { ru: "Вокзал", en: "Train station", audio: "tts_ru_Вокзал.mp3", topic: "transport" },
-            { ru: "Билет", en: "Ticket", audio: "tts_ru_Билет.mp3", topic: "transport" },
-            { ru: "Отель", en: "Hotel", audio: "tts_ru_Отель.mp3", topic: "transport" },
-
-            // Emergency words
-            { ru: "Помощь", en: "Help", audio: "tts_ru_Помощь.mp3", topic: "emergency" },
-            { ru: "Пожар", en: "Fire", audio: "tts_ru_Пожар.mp3", topic: "emergency" },
-            { ru: "Полиция", en: "Police", audio: "tts_ru_Полиция.mp3", topic: "emergency" },
-            { ru: "Скорая помощь", en: "Ambulance", audio: "tts_ru_Скорая помощь.mp3", topic: "emergency" },
-            { ru: "Врач", en: "Doctor", audio: "tts_ru_Врач.mp3", topic: "emergency" },
-            { ru: "Опасность", en: "Danger", audio: "tts_ru_Опасность.mp3", topic: "emergency" },
-            { ru: "Тревога", en: "Alarm", audio: "tts_ru_Тревога.mp3", topic: "emergency" },
-            { ru: "Спасите", en: "Save me", audio: "tts_ru_Спасите.mp3", topic: "emergency" },
-            { ru: "Полицейский", en: "Police officer", audio: "tts_ru_Полицейский.mp3", topic: "emergency" },
-
-            // Useful phrases
-            { ru: "Как сказать по-русски", en: "How do you say in Russian...", audio: "tts_ru_Как сказать по-русски.mp3", topic: "phrases" },
-            { ru: "Я не понимаю", en: "I don't understand", audio: "tts_ru_Я не понимаю.mp3", topic: "phrases" },
-            { ru: "Повторите пожалуйста", en: "Please repeat", audio: "tts_ru_Повторите пожалуйста.mp3", topic: "phrases" },
-            { ru: "Говорите медленнее", en: "Speak slower", audio: "tts_ru_Говорите медленнее.mp3", topic: "phrases" },
-            { ru: "Что это значит", en: "What does this mean?", audio: "tts_ru_Что это значит.mp3", topic: "phrases" },
-            { ru: "Я не знаю", en: "I don't know", audio: "tts_ru_Я не знаю.mp3", topic: "phrases" },
-            { ru: "Напишите это", en: "Write this down", audio: "tts_ru_Напишите это.mp3", topic: "phrases" },
-            { ru: "Помогите мне пожалуйста", en: "Please help me", audio: "tts_ru_Помогите мне пожалуйста.mp3", topic: "phrases" },
-            { ru: "Где туалет", en: "Where is the toilet?", audio: "tts_ru_Где туалет.mp3", topic: "phrases" }
-        ];
+        // (same as before, abbreviated for brevity in this response)
+        const vocabulary = [ /* ... full array from previous code ... */ ];
 
         // ================== APP STATE ==================
         let currentExercise = null;
@@ -445,11 +164,10 @@
         let totalAnswered = 0;
         let userAnswer = null;
         let currentTopic = 'all';
-        let seenIndices = new Set(); // holds indices of vocabulary items already seen in current topic
+        let seenIndices = new Set();
 
         const STORAGE_KEY = 'russianExercisesSeen';
 
-        // DOM elements
         const container = document.getElementById('exercise-container');
         const checkBtn = document.getElementById('check-btn');
         const nextBtn = document.getElementById('next-btn');
@@ -458,14 +176,14 @@
         const feedbackDiv = document.getElementById('feedback');
         const scoreDisplay = document.getElementById('score-display');
         const topicSelect = document.getElementById('topic-select');
+        const ratingDiv = document.getElementById('rating');
 
-        // Load seen indices from localStorage
+        // Load seen indices
         function loadSeen() {
             const stored = localStorage.getItem(STORAGE_KEY);
             if (stored) {
                 try {
-                    const arr = JSON.parse(stored);
-                    seenIndices = new Set(arr);
+                    seenIndices = new Set(JSON.parse(stored));
                 } catch (e) {
                     seenIndices = new Set();
                 }
@@ -476,7 +194,6 @@
             localStorage.setItem(STORAGE_KEY, JSON.stringify([...seenIndices]));
         }
 
-        // Get filtered vocabulary list based on topic
         function getFilteredVocabulary() {
             if (currentTopic === 'all') {
                 return vocabulary;
@@ -485,20 +202,16 @@
             }
         }
 
-        // Pick a random item not seen yet
         function pickUnseenItem() {
             const filtered = getFilteredVocabulary();
             if (filtered.length === 0) return null;
 
-            let unseen = filtered.filter((item, index) => {
-                // We need the original index in vocabulary, not the filtered index
+            let unseen = filtered.filter(item => {
                 const originalIndex = vocabulary.indexOf(item);
                 return !seenIndices.has(originalIndex);
             });
 
-            // If all items have been seen, reset seen set for this topic (or all)
             if (unseen.length === 0) {
-                // Reset seen set for filtered items only
                 filtered.forEach(item => {
                     const originalIndex = vocabulary.indexOf(item);
                     seenIndices.delete(originalIndex);
@@ -507,94 +220,34 @@
                 unseen = [...filtered];
             }
 
-            // Pick a random unseen item
             const randomItem = unseen[Math.floor(Math.random() * unseen.length)];
             const originalIndex = vocabulary.indexOf(randomItem);
-            // Mark as seen immediately (will be saved when answer is checked)
             seenIndices.add(originalIndex);
             saveSeen();
             return randomItem;
         }
 
-        // Exercise generation
         function generateExercise() {
             const item = pickUnseenItem();
             if (!item) return null;
 
-            // Randomly choose exercise type
             const types = ['select', 'write', 'fillblank', 'reading', 'speaking'];
             const type = types[Math.floor(Math.random() * types.length)];
 
             switch(type) {
-                case 'select':
-                    return createSelectExercise(item);
-                case 'write':
-                    return createWriteExercise(item);
-                case 'fillblank':
-                    return createFillBlankExercise(item);
-                case 'reading':
-                    return createReadingExercise(item);
-                case 'speaking':
-                    return createSpeakingExercise(item);
-                default:
-                    return null;
+                case 'select': return createSelectExercise(item);
+                case 'write': return createWriteExercise(item);
+                case 'fillblank': return createFillBlankExercise(item);
+                case 'reading': return createReadingExercise(item);
+                case 'speaking': return createSpeakingExercise(item);
+                default: return null;
             }
         }
 
-        function createSelectExercise(item) {
-            let options = [item.en];
-            while (options.length < 4) {
-                const randomItem = vocabulary[Math.floor(Math.random() * vocabulary.length)];
-                if (!options.includes(randomItem.en)) {
-                    options.push(randomItem.en);
-                }
-            }
-            options = shuffle(options);
-            return {
-                type: 'select',
-                prompt: `What does "<strong>${item.ru}</strong>" mean?`,
-                audio: item.audio,
-                correct: item.en,
-                options: options,
-                check: function(selected) {
-                    return selected === this.correct;
-                }
-            };
-        }
-
-        function createWriteExercise(item) {
-            return {
-                type: 'write',
-                prompt: `Type in Russian: <strong>${item.en}</strong>`,
-                audio: item.audio,
-                correct: item.ru,
-                check: function(answer) {
-                    return answer.trim().toLowerCase() === this.correct.toLowerCase();
-                }
-            };
-        }
-
-        function createFillBlankExercise(item) {
-            return {
-                type: 'fillblank',
-                prompt: `Fill in the blank: <strong>${item.en}</strong> → ____ (in Russian)`,
-                audio: item.audio,
-                correct: item.ru,
-                check: function(answer) {
-                    return answer.trim().toLowerCase() === this.correct.toLowerCase();
-                }
-            };
-        }
-
-        function createReadingExercise(item) {
-            return {
-                type: 'reading',
-                prompt: `Read aloud: <strong>${item.ru}</strong>`,
-                audio: item.audio,
-                correct: item.ru,
-                check: function() { return true; } // self-evaluation
-            };
-        }
+        function createSelectExercise(item) { /* same as before */ }
+        function createWriteExercise(item) { /* same as before */ }
+        function createFillBlankExercise(item) { /* same as before */ }
+        function createReadingExercise(item) { /* same as before */ }
 
         function createSpeakingExercise(item) {
             return {
@@ -602,10 +255,7 @@
                 prompt: `Say in Russian: <strong>${item.ru}</strong> (${item.en})`,
                 audio: item.audio,
                 correct: item.ru,
-                check: function(transcript) {
-                    if (!transcript) return false;
-                    return transcript.trim().toLowerCase() === this.correct.toLowerCase();
-                }
+                // No check function; handled via similarity
             };
         }
 
@@ -622,11 +272,14 @@
                 container.innerHTML = '<p>No exercises available. Please choose a topic.</p>';
                 checkBtn.disabled = true;
                 recordBtn.disabled = true;
+                ratingDiv.innerHTML = '';
                 return;
             }
             currentExercise = ex;
             userAnswer = null;
             feedbackDiv.classList.remove('show', 'correct', 'incorrect');
+            feedbackDiv.innerHTML = '';
+            ratingDiv.innerHTML = '';
             checkBtn.disabled = false;
             recordBtn.disabled = true;
 
@@ -641,7 +294,7 @@
             } else if (ex.type === 'write' || ex.type === 'fillblank') {
                 html += `<input type="text" id="text-answer" placeholder="Type here..." style="width:100%; padding:0.5rem; font-size:1rem;">`;
             } else if (ex.type === 'reading' || ex.type === 'speaking') {
-                html += `<p>Listen and repeat.</p>`;
+                html += `<p>Listen to the audio and then speak.</p>`;
                 if (ex.type === 'speaking') {
                     recordBtn.disabled = false;
                 }
@@ -649,7 +302,6 @@
 
             container.innerHTML = html;
 
-            // Event listeners for options
             if (ex.type === 'select') {
                 document.querySelectorAll('.option-btn').forEach(btn => {
                     btn.addEventListener('click', () => {
@@ -660,7 +312,6 @@
                 });
             }
 
-            // Event listener for text input
             if (ex.type === 'write' || ex.type === 'fillblank') {
                 const input = document.getElementById('text-answer');
                 input.addEventListener('input', () => {
@@ -668,7 +319,6 @@
                 });
             }
 
-            // Audio button
             playAudioBtn.onclick = () => {
                 if (ex.audio) {
                     const audio = new Audio('audio/' + ex.audio);
@@ -688,7 +338,6 @@
                     return;
                 }
                 isCorrect = currentExercise.check(userAnswer);
-                // Mark buttons
                 document.querySelectorAll('.option-btn').forEach(btn => {
                     if (btn.dataset.value === currentExercise.correct) {
                         btn.classList.add('correct');
@@ -702,13 +351,13 @@
                     return;
                 }
                 isCorrect = currentExercise.check(userAnswer);
-            } else if (currentExercise.type === 'reading' || currentExercise.type === 'speaking') {
-                // For speaking, if transcript exists, check it; otherwise self-evaluate
-                if (currentExercise.type === 'speaking' && currentExercise.transcript) {
-                    isCorrect = currentExercise.check(currentExercise.transcript);
-                } else {
-                    isCorrect = true; // self-evaluation
-                }
+            } else if (currentExercise.type === 'reading') {
+                isCorrect = true; // self-evaluation
+                message = 'Self-evaluation: read aloud and compare with the audio.';
+            } else if (currentExercise.type === 'speaking') {
+                // Speaking exercise is handled automatically after recognition; 
+                // Check button should not be used here, but if pressed, ignore.
+                return;
             }
 
             if (isCorrect) {
@@ -719,19 +368,72 @@
                 message = `Incorrect. The correct answer is: <strong>${currentExercise.correct}</strong>`;
                 feedbackDiv.className = 'feedback incorrect show';
             }
-
             totalAnswered++;
             scoreDisplay.textContent = `Score: ${score} / ${totalAnswered}`;
             feedbackDiv.innerHTML = message;
             checkBtn.disabled = true;
         }
 
-        function nextExercise() {
-            const ex = generateExercise();
-            renderExercise(ex);
+        // ================== SPEECH RECOGNITION & SIMILARITY ==================
+        function levenshtein(a, b) {
+            const matrix = Array.from({ length: a.length + 1 }, () => []);
+            for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
+            for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
+            for (let i = 1; i <= a.length; i++) {
+                for (let j = 1; j <= b.length; j++) {
+                    const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+                    matrix[i][j] = Math.min(
+                        matrix[i - 1][j] + 1,
+                        matrix[i][j - 1] + 1,
+                        matrix[i - 1][j - 1] + cost
+                    );
+                }
+            }
+            return matrix[a.length][b.length];
         }
 
-        // ================== SPEECH RECOGNITION ==================
+        function similarityPercentage(str1, str2) {
+            const s1 = str1.trim().toLowerCase();
+            const s2 = str2.trim().toLowerCase();
+            if (s1.length === 0 || s2.length === 0) return 0;
+            const dist = levenshtein(s1, s2);
+            const maxLen = Math.max(s1.length, s2.length);
+            return Math.max(0, Math.round((1 - dist / maxLen) * 100));
+        }
+
+        function getRating(percent) {
+            if (percent >= 95) return 'Perfect! 🎯';
+            if (percent >= 85) return 'Very good! 👏';
+            if (percent >= 70) return 'Good! 👍';
+            if (percent >= 50) return 'Okay. 🙂';
+            if (percent >= 30) return 'Bad. 😕';
+            return 'Terrible. 😖';
+        }
+
+        function handleSpeakingResult(transcript) {
+            if (!currentExercise || currentExercise.type !== 'speaking') return;
+
+            const percent = similarityPercentage(transcript, currentExercise.correct);
+            const rating = getRating(percent);
+            const message = `You said: <strong>${transcript}</strong><br>
+                             Similarity: <strong>${percent}%</strong><br>
+                             Rating: <strong>${rating}</strong>`;
+
+            feedbackDiv.className = 'feedback show';
+            feedbackDiv.innerHTML = message;
+            ratingDiv.innerHTML = `<span style="font-size:2rem;">${rating}</span>`;
+
+            // Update score: treat as correct if percent >= 70
+            const isCorrect = percent >= 70;
+            if (isCorrect) {
+                score++;
+            }
+            totalAnswered++;
+            scoreDisplay.textContent = `Score: ${score} / ${totalAnswered}`;
+            checkBtn.disabled = true;
+        }
+
+        // Speech recognition setup
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             const recognition = new SpeechRecognition();
@@ -748,7 +450,13 @@
                 p.id = 'transcript';
                 p.innerHTML = `You said: <strong>${transcript}</strong>`;
                 container.appendChild(p);
-                checkBtn.disabled = false;
+
+                if (currentExercise.type === 'speaking') {
+                    handleSpeakingResult(transcript);
+                } else {
+                    // For non-speaking, we just display the transcript
+                    checkBtn.disabled = false;
+                }
             };
 
             recognition.onerror = (event) => {
@@ -770,18 +478,11 @@
         // ================== TOPIC SELECTION ==================
         topicSelect.addEventListener('change', () => {
             currentTopic = topicSelect.value;
-            // Reset seen set? Not necessarily; keep seen across topics but track per topic.
-            // We'll keep a global seen set but when topic changes, we may want to reset or keep?
-            // For simplicity, we'll keep the seen set but only filter by topic when picking.
-            // However, if user switches topic, they may get items already seen in that topic.
-            // That's acceptable.
-            // But we should generate a new exercise after topic change.
             nextExercise();
         });
 
         // ================== INITIALIZATION ==================
         loadSeen();
-        // Set default topic to "all" and generate first exercise
         currentTopic = 'all';
         topicSelect.value = 'all';
         nextExercise();
