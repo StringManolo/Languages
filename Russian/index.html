@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alfabeto Ruso con Audio</title>
+    <style>
+        :root {
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #212529;
+            --muted: #6c757d;
+            --border: #dee2e6;
+            --accent: #0d6efd;
+            --accent-hover: #0b5ed7;
+            --radius: 12px;
+            --shadow: 0 2px 4px rgba(0,0,0,0.05);
+            --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font);
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 1.1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.25rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+        }
+
+        .letter {
+            font-size: 3rem;
+            font-weight: bold;
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
+        }
+
+        .description {
+            color: var(--muted);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        audio {
+            width: 100%;
+            margin-top: auto;
+            outline: none;
+        }
+
+        .footer {
+            margin-top: 3rem;
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Алфавит · Alfabeto Ruso</h1>
+        <p class="subtitle">Haz clic en el reproductor para escuchar cada letra</p>
+    </header>
+
+    <div class="grid">
+        <!-- Letras rusas con su audio -->
+        <div class="card">
+            <div class="letter">А</div>
+            <div class="description">father</div>
+            <audio controls src="audio/tts_ru_А.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">Б</div>
+            <div class="description">baby</div>
+            <audio controls src="audio/tts_ru_Б.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">В</div>
+            <div class="description">vibes</div>
+            <audio controls src="audio/tts_ru_В.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">Г</div>
+            <div class="description">good</div>
+            <audio controls src="audio/tts_ru_Г.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">Д</div>
+            <div class="description">date</div>
+            <audio controls src="audio/tts_ru_Д.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">Е</div>
+            <div class="description">yes</div>
+            <audio controls src="audio/tts_ru_Е.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">Ё</div>
+            <div class="description">your</div>
+            <audio controls src="audio/tts_ru_Ё.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">Ж</div>
+            <div class="description">pleasure</div>
+            <audio controls src="audio/tts_ru_Ж.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">З</div>
+            <div class="description">zodiac</div>
+            <audio controls src="audio/tts_ru_З.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">И</div>
+            <div class="description">meet</div>
+            <audio controls src="audio/tts_ru_И.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">Й</div>
+            <div class="description">toy</div>
+            <audio controls src="audio/tts_ru_Й.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">К</div>
+            <div class="description">kind</div>
+            <audio controls src="audio/tts_ru_К.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">Л</div>
+            <div class="description">love</div>
+            <audio controls src="audio/tts_ru_Л.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">М</div>
+            <div class="description">men</div>
+            <audio controls src="audio/tts_ru_М.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">Н</div>
+            <div class="description">nice</div>
+            <audio controls src="audio/tts_ru_Н.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">О</div>
+            <div class="description">old</div>
+            <audio controls src="audio/tts_ru_О.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">П</div>
+            <div class="description">people</div>
+            <audio controls src="audio/tts_ru_П.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">Р</div>
+            <div class="description">rain (roll like in Spanish)</div>
+            <audio controls src="audio/tts_ru_Р.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">С</div>
+            <div class="description">sun</div>
+            <audio controls src="audio/tts_ru_С.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">Т</div>
+            <div class="description">take</div>
+            <audio controls src="audio/tts_ru_Т.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">У</div>
+            <div class="description">soon</div>
+            <audio controls src="audio/tts_ru_У.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">Ф</div>
+            <div class="description">fine</div>
+            <audio controls src="audio/tts_ru_Ф.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">Х</div>
+            <div class="description">hello (jota suave)</div>
+            <audio controls src="audio/tts_ru_Х.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">Ц</div>
+            <div class="description">its</div>
+            <audio controls src="audio/tts_ru_Ц.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">Ч</div>
+            <div class="description">chips</div>
+            <audio controls src="audio/tts_ru_Ч.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">Ш</div>
+            <div class="description">shape</div>
+            <audio controls src="audio/tts_ru_Ш.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">Щ</div>
+            <div class="description">sheep (softer)</div>
+            <audio controls src="audio/tts_ru_Щ.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">Ъ</div>
+            <div class="description">hard sign – pause, hard consonant</div>
+            <audio controls src="audio/tts_ru_Ъ.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">Ы</div>
+            <div class="description">special: “rule” position, “sit” sound</div>
+            <audio controls src="audio/tts_ru_Ы.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">Ь</div>
+            <div class="description">soft sign – softens consonant</div>
+            <audio controls src="audio/tts_ru_Ь.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">Э</div>
+            <div class="description">edit</div>
+            <audio controls src="audio/tts_ru_Э.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">Ю</div>
+            <div class="description">university</div>
+            <audio controls src="audio/tts_ru_Ю.mp3"></audio>
+        </div>
+        <div class="card">
+            <div class="letter">Я</div>
+            <div class="description">yard</div>
+            <audio controls src="audio/tts_ru_Я.mp3"></audio>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Guía de pronunciación del alfabeto ruso · Audio generado con síntesis de voz (TTS)</p>
+        <p><a href="https://github.com/tu-usuario/tu-repo" target="_blank">Ver repositorio en GitHub</a></p>
+    </div>
+</body>
+</html>
