@@ -5,7 +5,7 @@
 Click on the 🔊 icon to listen to each sound.
 
 ##### Same pronunciation as in English
-- А f**a**ther [🔊](audio/tts_ru_А.mp3)
+- А f**a**ther <audio>[🔊](audio/tts_ru_А.mp3)</audio>
 - К **k**ind [🔊](audio/tts_ru_К.mp3)
 - М **m**en [🔊](audio/tts_ru_М.mp3)
 - О **o**ld [🔊](audio/tts_ru_О.mp3)
