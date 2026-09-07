@@ -393,7 +393,20 @@
         const topicSelect = document.getElementById('topic-select');
         const ratingDiv = document.getElementById('rating');
         const voiceWarning = document.getElementById('voice-warning');
-        const hasSpeechRecognition = 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
+
+        let SpeechRecognitionCtor = null;
+        let hasSpeechRecognition = false;
+
+        try {
+            SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+            if (SpeechRecognitionCtor) {
+                const testRecognition = new SpeechRecognitionCtor();
+                hasSpeechRecognition = !!testRecognition;
+            }
+        } catch (error) {
+            SpeechRecognitionCtor = null;
+            hasSpeechRecognition = false;
+        }
 
         // These two only keep "seenIndices" in memory for the current session
         // (no localStorage), so this always runs safely wherever it's opened.
@@ -558,6 +571,7 @@
                 if (ex.type === 'speaking') {
                     recordBtn.disabled = false;
                     checkBtn.disabled = true;
+                    recordBtn.textContent = hasSpeechRecognition ? '🎤 Record' : '✓ I repeated it';
                 }
             }
 
@@ -721,9 +735,16 @@
         let recognitionRunning = false;
         let recognitionTimeout = null;
 
-        if (hasSpeechRecognition) {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            recognition = new SpeechRecognition();
+        if (hasSpeechRecognition && SpeechRecognitionCtor) {
+            try {
+                recognition = new SpeechRecognitionCtor();
+            } catch (error) {
+                recognition = null;
+                hasSpeechRecognition = false;
+            }
+        }
+
+        if (recognition) {
             recognition.lang = 'ru-RU';
             recognition.interimResults = false;
             recognition.maxAlternatives = 1;
