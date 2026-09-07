@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicios de Ruso</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            max-width: 720px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            line-height: 1.5;
+        }
+        h1, h2, h3 { margin-top: 2rem; }
+        .exercise-box {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            background: #fafafa;
+        }
+        .prompt {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+        .options li {
+            margin: 0.5rem 0;
+        }
+        .options button {
+            width: 100%;
+            text-align: left;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .options button:hover { background: #f0f0f0; }
+        .correct { background: #d4edda !important; border-color: #28a745 !important; }
+        .incorrect { background: #f8d7da !important; border-color: #dc3545 !important; }
+        .feedback {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            display: none;
+        }
+        .feedback.show { display: block; }
+        .feedback.correct { background: #d4edda; color: #155724; }
+        .feedback.incorrect { background: #f8d7da; color: #721c24; }
+        .controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        button:disabled { background: #6c757d; cursor: not-allowed; }
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0 4px;
+            vertical-align: middle;
+        }
+        .score {
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        .speech-result {
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+        #transcript { font-weight: bold; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <h1>Ejercicios de Ruso</h1>
+    <p>Practica lo aprendido con diferentes tipos de ejercicios. Haz clic en los botones o escribe según corresponda.</p>
+
+    <div class="score" id="score-display">Puntuación: 0 / 0</div>
+
+    <div id="exercise-container" class="exercise-box">
+        <!-- Aquí se cargará el ejercicio -->
+    </div>
+
+    <div class="controls">
+        <button id="check-btn" disabled>Comprobar</button>
+        <button id="next-btn">Siguiente ejercicio</button>
+        <button id="play-audio-btn" class="icon-btn" title="Reproducir audio">&#128266;</button>
+        <button id="record-btn" disabled>🎤 Grabar</button>
+    </div>
+
+    <div id="feedback" class="feedback"></div>
+
+    <script>
+        // ================== DATOS DE VOCABULARIO ==================
+        // Cada elemento: { ru: "texto ruso", en: "traducción", audio: "archivo.mp3" }
+        const vocabulary = [
+            // Alfabeto (letras sueltas)
+            { ru: "А", en: "A (father)", audio: "tts_ru_А.mp3" },
+            { ru: "Б", en: "B (baby)", audio: "tts_ru_Б.mp3" },
+            { ru: "В", en: "V (vibes)", audio: "tts_ru_В.mp3" },
+            { ru: "Г", en: "G (good)", audio: "tts_ru_Г.mp3" },
+            { ru: "Д", en: "D (date)", audio: "tts_ru_Д.mp3" },
+            { ru: "Е", en: "Ye (yes)", audio: "tts_ru_Е.mp3" },
+            { ru: "Ё", en: "Yo (your)", audio: "tts_ru_Ё.mp3" },
+            { ru: "Ж", en: "Zh (pleasure)", audio: "tts_ru_Ж.mp3" },
+            { ru: "З", en: "Z (zodiac)", audio: "tts_ru_З.mp3" },
+            { ru: "И", en: "I (meet)", audio: "tts_ru_И.mp3" },
+            { ru: "Й", en: "Y (toy)", audio: "tts_ru_Й.mp3" },
+            { ru: "К", en: "K (kind)", audio: "tts_ru_К.mp3" },
+            { ru: "Л", en: "L (love)", audio: "tts_ru_Л.mp3" },
+            { ru: "М", en: "M (men)", audio: "tts_ru_М.mp3" },
+            { ru: "Н", en: "N (nice)", audio: "tts_ru_Н.mp3" },
+            { ru: "О", en: "O (old)", audio: "tts_ru_О.mp3" },
+            { ru: "П", en: "P (people)", audio: "tts_ru_П.mp3" },
+            { ru: "Р", en: "R (rain)", audio: "tts_ru_Р.mp3" },
+            { ru: "С", en: "S (sun)", audio: "tts_ru_С.mp3" },
+            { ru: "Т", en: "T (take)", audio: "tts_ru_Т.mp3" },
+            { ru: "У", en: "U (soon)", audio: "tts_ru_У.mp3" },
+            { ru: "Ф", en: "F (fine)", audio: "tts_ru_Ф.mp3" },
+            { ru: "Х", en: "Kh (hello)", audio: "tts_ru_Х.mp3" },
+            { ru: "Ц", en: "Ts (its)", audio: "tts_ru_Ц.mp3" },
+            { ru: "Ч", en: "Ch (chips)", audio: "tts_ru_Ч.mp3" },
+            { ru: "Ш", en: "Sh (shape)", audio: "tts_ru_Ш.mp3" },
+            { ru: "Щ", en: "Shch (sheep)", audio: "tts_ru_Щ.mp3" },
+            { ru: "Ъ", en: "Hard sign", audio: "tts_ru_Ъ.mp3" },
+            { ru: "Ы", en: "Special i", audio: "tts_ru_Ы.mp3" },
+            { ru: "Ь", en: "Soft sign", audio: "tts_ru_Ь.mp3" },
+            { ru: "Э", en: "E (edit)", audio: "tts_ru_Э.mp3" },
+            { ru: "Ю", en: "Yu (university)", audio: "tts_ru_Ю.mp3" },
+            { ru: "Я", en: "Ya (yard)", audio: "tts_ru_Я.mp3" },
+
+            // Saludos y despedidas
+            { ru: "Привет", en: "Hola (informal)", audio: "tts_ru_Привет.mp3" },
+            { ru: "Здравствуйте", en: "Hola (formal)", audio: "tts_ru_Здравствуйте.mp3" },
+            { ru: "Очень приятно", en: "Encantado de conocerte", audio: "tts_ru_Очень приятно.mp3" },
+            { ru: "Как Ты", en: "¿Cómo estás? (informal)", audio: "tts_ru_Как Ты.mp3" },
+            { ru: "Пока", en: "Adiós (informal)", audio: "tts_ru_Пока.mp3" },
+            { ru: "До свидания", en: "Adiós (formal)", audio: "tts_ru_До свидания.mp3" },
+            { ru: "Доброе Утро", en: "Buenos días", audio: "tts_ru_Доброе Утро.mp3" },
+            { ru: "Добрый день", en: "Buenas tardes", audio: "tts_ru_Добрый день.mp3" },
+            { ru: "Добрый вечер", en: "Buenas noches (llegada)", audio: "tts_ru_Добрый вечер.mp3" },
+            { ru: "Доброй ночи", en: "Buenas noches (llegada)", audio: "tts_ru_Доброй ночи.mp3" },
+            { ru: "Спокойной ночи", en: "Buenas noches (despedida)", audio: "tts_ru_Спокойной ночи.mp3" },
+
+            // Disculpas
+            { ru: "Прости", en: "Perdón (informal)", audio: "tts_ru_Прости.mp3" },
+            { ru: "Простите", en: "Perdón (formal)", audio: "tts_ru_Простите.mp3" },
+            { ru: "Извини", en: "Disculpa (informal)", audio: "tts_ru_Извини.mp3" },
+            { ru: "Извините", en: "Disculpe (formal)", audio: "tts_ru_Извините.mp3" },
+            { ru: "Прошу прощения", en: "Le ruego me disculpe", audio: "tts_ru_Прошу прощения.mp3" },
+
+            // Bebidas y comidas
+            { ru: "Кофе", en: "Café", audio: "tts_ru_Кофе.mp3" },
+            { ru: "Вода", en: "Agua", audio: "tts_ru_Вода.mp3" },
+            { ru: "Пиво", en: "Cerveza", audio: "tts_ru_Пиво.mp3" },
+            { ru: "Хлеб", en: "Pan", audio: "tts_ru_Хлеб.mp3" },
+            { ru: "Сыр", en: "Queso", audio: "tts_ru_Сыр.mp3" },
+            { ru: "Мясо", en: "Carne", audio: "tts_ru_Мясо.mp3" },
+            { ru: "Рыба", en: "Pescado", audio: "tts_ru_Рыба.mp3" },
+            { ru: "Яйцо", en: "Huevo", audio: "tts_ru_Яйцо.mp3" },
+            { ru: "Фрукты", en: "Fruta", audio: "tts_ru_Фрукты.mp3" },
+            { ru: "Овощи", en: "Verduras", audio: "tts_ru_Овощи.mp3" },
+            { ru: "Суп", en: "Sopa", audio: "tts_ru_Суп.mp3" },
+            { ru: "Салат", en: "Ensalada", audio: "tts_ru_Салат.mp3" },
+            { ru: "Картофель", en: "Patata", audio: "tts_ru_Картофель.mp3" },
+
+            // Familia
+            { ru: "Мама", en: "Mamá", audio: "tts_ru_Мама.mp3" },
+            { ru: "Папа", en: "Papá", audio: "tts_ru_Папа.mp3" },
+            { ru: "Брат", en: "Hermano", audio: "tts_ru_Брат.mp3" },
+            { ru: "Сестра", en: "Hermana", audio: "tts_ru_Сестра.mp3" },
+            { ru: "Сын", en: "Hijo", audio: "tts_ru_Сын.mp3" },
+            { ru: "Дочь", en: "Hija", audio: "tts_ru_Дочь.mp3" },
+            { ru: "Муж", en: "Marido", audio: "tts_ru_Муж.mp3" },
+            { ru: "Жена", en: "Esposa", audio: "tts_ru_Жена.mp3" },
+            { ru: "Бабушка", en: "Abuela", audio: "tts_ru_Бабушка.mp3" },
+            { ru: "Дедушка", en: "Abuelo", audio: "tts_ru_Дедушка.mp3" },
+
+            // Lugares
+            { ru: "Дом", en: "Casa", audio: "tts_ru_Дом.mp3" },
+            { ru: "Школа", en: "Escuela", audio: "tts_ru_Школа.mp3" },
+            { ru: "Работа", en: "Trabajo", audio: "tts_ru_Работа.mp3" },
+            { ru: "Магазин", en: "Tienda", audio: "tts_ru_Магазин.mp3" },
+            { ru: "Ресторан", en: "Restaurante", audio: "tts_ru_Ресторан.mp3" },
+            { ru: "Больница", en: "Hospital", audio: "tts_ru_Больница.mp3" },
+            { ru: "Банк", en: "Banco", audio: "tts_ru_Банк.mp3" },
+            { ru: "Аптека", en: "Farmacia", audio: "tts_ru_Аптека.mp3" },
+            { ru: "Парк", en: "Parque", audio: "tts_ru_Парк.mp3" },
+            { ru: "Церковь", en: "Iglesia", audio: "tts_ru_Церковь.mp3" },
+
+            // Pronombres
+            { ru: "Я", en: "Yo", audio: "tts_ru_Я.mp3" },
+            { ru: "Ты", en: "Tú (informal)", audio: "tts_ru_Ты.mp3" },
+            { ru: "Вы", en: "Usted / vosotros", audio: "tts_ru_Вы.mp3" },
+            { ru: "Он", en: "Él", audio: "tts_ru_Он.mp3" },
+            { ru: "Она", en: "Ella", audio: "tts_ru_Она.mp3" },
+            { ru: "Оно", en: "Ello", audio: "tts_ru_Оно.mp3" },
+            { ru: "Мы", en: "Nosotros", audio: "tts_ru_Мы.mp3" },
+            { ru: "Они", en: "Ellos", audio: "tts_ru_Они.mp3" },
+
+            // Números
+            { ru: "Ноль", en: "0", audio: "tts_ru_Ноль.mp3" },
+            { ru: "Один", en: "1", audio: "tts_ru_Один.mp3" },
+            { ru: "Два", en: "2", audio: "tts_ru_Два.mp3" },
+            { ru: "Три", en: "3", audio: "tts_ru_Три.mp3" },
+            { ru: "Четыре", en: "4", audio: "tts_ru_Четыре.mp3" },
+            { ru: "Пять", en: "5", audio: "tts_ru_Пять.mp3" },
+            { ru: "Шесть", en: "6", audio: "tts_ru_Шесть.mp3" },
+            { ru: "Семь", en: "7", audio: "tts_ru_Семь.mp3" },
+            { ru: "Восемь", en: "8", audio: "tts_ru_Восемь.mp3" },
+            { ru: "Девять", en: "9", audio: "tts_ru_Девять.mp3" },
+            { ru: "Десять", en: "10", audio: "tts_ru_Десять.mp3" },
+
+            // Colores
+            { ru: "Красный", en: "Rojo", audio: "tts_ru_Красный.mp3" },
+            { ru: "Синий", en: "Azul", audio: "tts_ru_Синий.mp3" },
+            { ru: "Зелёный", en: "Verde", audio: "tts_ru_Зелёный.mp3" },
+            { ru: "Жёлтый", en: "Amarillo", audio: "tts_ru_Жёлтый.mp3" },
+            { ru: "Чёрный", en: "Negro", audio: "tts_ru_Чёрный.mp3" },
+            { ru: "Белый", en: "Blanco", audio: "tts_ru_Белый.mp3" },
+            { ru: "Серый", en: "Gris", audio: "tts_ru_Серый.mp3" },
+            { ru: "Коричневый", en: "Marrón", audio: "tts_ru_Коричневый.mp3" },
+            { ru: "Оранжевый", en: "Naranja", audio: "tts_ru_Оранжевый.mp3" },
+
+            // Días de la semana
+            { ru: "Понедельник", en: "Lunes", audio: "tts_ru_Понедельник.mp3" },
+            { ru: "Вторник", en: "Martes", audio: "tts_ru_Вторник.mp3" },
+            { ru: "Среда", en: "Miércoles", audio: "tts_ru_Среда.mp3" },
+            { ru: "Четверг", en: "Jueves", audio: "tts_ru_Четверг.mp3" },
+            { ru: "Пятница", en: "Viernes", audio: "tts_ru_Пятница.mp3" },
+            { ru: "Суббота", en: "Sábado", audio: "tts_ru_Суббота.mp3" },
+            { ru: "Воскресенье", en: "Domingo", audio: "tts_ru_Воскресенье.mp3" },
+
+            // Meses
+            { ru: "Январь", en: "Enero", audio: "tts_ru_Январь.mp3" },
+            { ru: "Февраль", en: "Febrero", audio: "tts_ru_Февраль.mp3" },
+            { ru: "Март", en: "Marzo", audio: "tts_ru_Март.mp3" },
+            { ru: "Апрель", en: "Abril", audio: "tts_ru_Апрель.mp3" },
+            { ru: "Май", en: "Mayo", audio: "tts_ru_Май.mp3" },
+            { ru: "Июнь", en: "Junio", audio: "tts_ru_Июнь.mp3" },
+            { ru: "Июль", en: "Julio", audio: "tts_ru_Июль.mp3" },
+            { ru: "Август", en: "Agosto", audio: "tts_ru_Август.mp3" },
+            { ru: "Сентябрь", en: "Septiembre", audio: "tts_ru_Сентябрь.mp3" },
+            { ru: "Октябрь", en: "Octubre", audio: "tts_ru_Октябрь.mp3" },
+            { ru: "Ноябрь", en: "Noviembre", audio: "tts_ru_Ноябрь.mp3" },
+            { ru: "Декабрь", en: "Diciembre", audio: "tts_ru_Декабрь.mp3" },
+
+            // Verbos
+            { ru: "Быть", en: "Ser / estar", audio: "tts_ru_Быть.mp3" },
+            { ru: "Говорить", en: "Hablar", audio: "tts_ru_Говорить.mp3" },
+            { ru: "Есть", en: "Comer", audio: "tts_ru_Есть.mp3" },
+            { ru: "Пить", en: "Beber", audio: "tts_ru_Пить.mp3" },
+            { ru: "Идти", en: "Ir", audio: "tts_ru_Идти.mp3" },
+            { ru: "Видеть", en: "Ver", audio: "tts_ru_Видеть.mp3" },
+            { ru: "Слышать", en: "Oír", audio: "tts_ru_Слышать.mp3" },
+            { ru: "Знать", en: "Saber / conocer", audio: "tts_ru_Знать.mp3" },
+            { ru: "Хотеть", en: "Querer", audio: "tts_ru_Хотеть.mp3" },
+            { ru: "Мочь", en: "Poder", audio: "tts_ru_Мочь.mp3" },
+
+            // Conectores
+            { ru: "И", en: "Y", audio: "tts_ru_И.mp3" },
+            { ru: "Или", en: "O", audio: "tts_ru_Или.mp3" },
+            { ru: "Но", en: "Pero", audio: "tts_ru_Но.mp3" },
+            { ru: "Потому что", en: "Porque", audio: "tts_ru_Потому что.mp3" },
+            { ru: "Если", en: "Si (condicional)", audio: "tts_ru_Если.mp3" },
+            { ru: "Что", en: "Que / qué", audio: "tts_ru_Что.mp3" },
+            { ru: "Когда", en: "Cuándo / cuando", audio: "tts_ru_Когда.mp3" },
+            { ru: "Так как", en: "Ya que", audio: "tts_ru_Так как.mp3" },
+            { ru: "Ни", en: "Ni", audio: "tts_ru_Ни.mp3" },
+
+            // Palabras interrogativas
+            { ru: "Кто", en: "Quién", audio: "tts_ru_Кто.mp3" },
+            { ru: "Что", en: "Qué", audio: "tts_ru_Что.mp3" },
+            { ru: "Где", en: "Dónde", audio: "tts_ru_Где.mp3" },
+            { ru: "Когда", en: "Cuándo", audio: "tts_ru_Когда.mp3" },
+            { ru: "Почему", en: "Por qué", audio: "tts_ru_Почему.mp3" },
+            { ru: "Как", en: "Cómo", audio: "tts_ru_Как.mp3" },
+            { ru: "Сколько", en: "Cuánto(s)", audio: "tts_ru_Сколько.mp3" },
+            { ru: "Какой", en: "Cuál / qué tipo", audio: "tts_ru_Какой.mp3" },
+            { ru: "Чей", en: "De quién", audio: "tts_ru_Чей.mp3" },
+
+            // Adjetivos
+            { ru: "Большой", en: "Grande", audio: "tts_ru_Большой.mp3" },
+            { ru: "Маленький", en: "Pequeño", audio: "tts_ru_Маленький.mp3" },
+            { ru: "Хороший", en: "Bueno", audio: "tts_ru_Хороший.mp3" },
+            { ru: "Плохой", en: "Malo", audio: "tts_ru_Плохой.mp3" },
+            { ru: "Новый", en: "Nuevo", audio: "tts_ru_Новый.mp3" },
+            { ru: "Старый", en: "Viejo", audio: "tts_ru_Старый.mp3" },
+            { ru: "Красивый", en: "Hermoso", audio: "tts_ru_Красивый.mp3" },
+            { ru: "Дорогой", en: "Caro / querido", audio: "tts_ru_Дорогой.mp3" },
+            { ru: "Дешёвый", en: "Barato", audio: "tts_ru_Дешёвый.mp3" },
+            { ru: "Интересный", en: "Interesante", audio: "tts_ru_Интересный.mp3" },
+
+            // Expresiones de tiempo
+            { ru: "Сейчас", en: "Ahora", audio: "tts_ru_Сейчас.mp3" },
+            { ru: "Позже", en: "Más tarde", audio: "tts_ru_Позже.mp3" },
+            { ru: "Сегодня", en: "Hoy", audio: "tts_ru_Сегодня.mp3" },
+            { ru: "Вчера", en: "Ayer", audio: "tts_ru_Вчера.mp3" },
+            { ru: "Завтра", en: "Mañana", audio: "tts_ru_Завтра.mp3" },
+            { ru: "Утро", en: "Mañana (parte del día)", audio: "tts_ru_Утро.mp3" },
+            { ru: "День", en: "Día", audio: "tts_ru_День.mp3" },
+            { ru: "Вечер", en: "Tarde/noche", audio: "tts_ru_Вечер.mp3" },
+            { ru: "Ночь", en: "Noche", audio: "tts_ru_Ночь.mp3" },
+            { ru: "Рано", en: "Temprano", audio: "tts_ru_Рано.mp3" },
+            { ru: "Поздно", en: "Tarde", audio: "tts_ru_Поздно.mp3" },
+
+            // Estaciones y clima
+            { ru: "Весна", en: "Primavera", audio: "tts_ru_Весна.mp3" },
+            { ru: "Лето", en: "Verano", audio: "tts_ru_Лето.mp3" },
+            { ru: "Осень", en: "Otoño", audio: "tts_ru_Осень.mp3" },
+            { ru: "Зима", en: "Invierno", audio: "tts_ru_Зима.mp3" },
+            { ru: "Погода", en: "Tiempo (clima)", audio: "tts_ru_Погода.mp3" },
+            { ru: "Солнце", en: "Sol", audio: "tts_ru_Солнце.mp3" },
+            { ru: "Дождь", en: "Lluvia", audio: "tts_ru_Дождь.mp3" },
+            { ru: "Снег", en: "Nieve", audio: "tts_ru_Снег.mp3" },
+            { ru: "Ветер", en: "Viento", audio: "tts_ru_Ветер.mp3" },
+            { ru: "Тепло", en: "Calor", audio: "tts_ru_Тепло.mp3" },
+            { ru: "Холодно", en: "Frío", audio: "tts_ru_Холодно.mp3" },
+            { ru: "Жарко", en: "Caluroso", audio: "tts_ru_Жарко.mp3" },
+
+            // Partes del cuerpo
+            { ru: "Голова", en: "Cabeza", audio: "tts_ru_Голова.mp3" },
+            { ru: "Лицо", en: "Cara", audio: "tts_ru_Лицо.mp3" },
+            { ru: "Глаз", en: "Ojo", audio: "tts_ru_Глаз.mp3" },
+            { ru: "Нос", en: "Nariz", audio: "tts_ru_Нос.mp3" },
+            { ru: "Рот", en: "Boca", audio: "tts_ru_Рот.mp3" },
+            { ru: "Ухо", en: "Oreja", audio: "tts_ru_Ухо.mp3" },
+            { ru: "Рука", en: "Mano/brazo", audio: "tts_ru_Рука.mp3" },
+            { ru: "Нога", en: "Pierna/pie", audio: "tts_ru_Нога.mp3" },
+            { ru: "Палец", en: "Dedo", audio: "tts_ru_Палец.mp3" },
+            { ru: "Живот", en: "Estómago", audio: "tts_ru_Живот.mp3" },
+            { ru: "Спина", en: "Espalda", audio: "tts_ru_Спина.mp3" },
+            { ru: "Зуб", en: "Diente", audio: "tts_ru_Зуб.mp3" },
+
+            // Ropa
+            { ru: "Одежда", en: "Ropa", audio: "tts_ru_Одежда.mp3" },
+            { ru: "Рубашка", en: "Camisa", audio: "tts_ru_Рубашка.mp3" },
+            { ru: "Брюки", en: "Pantalones", audio: "tts_ru_Брюки.mp3" },
+            { ru: "Платье", en: "Vestido", audio: "tts_ru_Платье.mp3" },
+            { ru: "Юбка", en: "Falda", audio: "tts_ru_Юбка.mp3" },
+            { ru: "Обувь", en: "Zapatos", audio: "tts_ru_Обувь.mp3" },
+            { ru: "Куртка", en: "Chaqueta", audio: "tts_ru_Куртка.mp3" },
+            { ru: "Шапка", en: "Gorro", audio: "tts_ru_Шапка.mp3" },
+            { ru: "Носки", en: "Calcetines", audio: "tts_ru_Носки.mp3" },
+            { ru: "Перчатки", en: "Guantes", audio: "tts_ru_Перчатки.mp3" },
+
+            // Transporte
+            { ru: "Машина", en: "Coche", audio: "tts_ru_Машина.mp3" },
+            { ru: "Автобус", en: "Autobús", audio: "tts_ru_Автобус.mp3" },
+            { ru: "Поезд", en: "Tren", audio: "tts_ru_Поезд.mp3" },
+            { ru: "Самолёт", en: "Avión", audio: "tts_ru_Самолёт.mp3" },
+            { ru: "Велосипед", en: "Bicicleta", audio: "tts_ru_Велосипед.mp3" },
+            { ru: "Такси", en: "Taxi", audio: "tts_ru_Такси.mp3" },
+            { ru: "Аэропорт", en: "Aeropuerto", audio: "tts_ru_Аэропорт.mp3" },
+            { ru: "Вокзал", en: "Estación de tren", audio: "tts_ru_Вокзал.mp3" },
+            { ru: "Билет", en: "Billete", audio: "tts_ru_Билет.mp3" },
+            { ru: "Отель", en: "Hotel", audio: "tts_ru_Отель.mp3" },
+
+            // Emergencias
+            { ru: "Помощь", en: "Ayuda", audio: "tts_ru_Помощь.mp3" },
+            { ru: "Пожар", en: "Fuego", audio: "tts_ru_Пожар.mp3" },
+            { ru: "Полиция", en: "Policía", audio: "tts_ru_Полиция.mp3" },
+            { ru: "Скорая помощь", en: "Ambulancia", audio: "tts_ru_Скорая помощь.mp3" },
+            { ru: "Врач", en: "Médico", audio: "tts_ru_Врач.mp3" },
+            { ru: "Опасность", en: "Peligro", audio: "tts_ru_Опасность.mp3" },
+            { ru: "Тревога", en: "Alarma", audio: "tts_ru_Тревога.mp3" },
+            { ru: "Спасите", en: "¡Socorro!", audio: "tts_ru_Спасите.mp3" },
+            { ru: "Полицейский", en: "Agente de policía", audio: "tts_ru_Полицейский.mp3" },
+
+            // Frases útiles
+            { ru: "Как сказать по-русски", en: "¿Cómo se dice en ruso...?", audio: "tts_ru_Как сказать по-русски.mp3" },
+            { ru: "Я не понимаю", en: "No entiendo", audio: "tts_ru_Я не понимаю.mp3" },
+            { ru: "Повторите пожалуйста", en: "Repita, por favor", audio: "tts_ru_Повторите пожалуйста.mp3" },
+            { ru: "Говорите медленнее", en: "Hable más despacio", audio: "tts_ru_Говорите медленнее.mp3" },
+            { ru: "Что это значит", en: "¿Qué significa esto?", audio: "tts_ru_Что это значит.mp3" },
+            { ru: "Я не знаю", en: "No sé", audio: "tts_ru_Я не знаю.mp3" },
+            { ru: "Напишите это", en: "Escríbalo", audio: "tts_ru_Напишите это.mp3" },
+            { ru: "Помогите мне пожалуйста", en: "Ayúdeme, por favor", audio: "tts_ru_Помогите мне пожалуйста.mp3" },
+            { ru: "Где туалет", en: "¿Dónde está el baño?", audio: "tts_ru_Где туалет.mp3" }
+        ];
+
+        // ================== GESTIÓN DE EJERCICIOS ==================
+        let currentExercise = null;
+        let score = 0;
+        let totalAnswered = 0;
+        let exerciseQueue = [];
+        let userAnswer = null;
+
+        // Elementos DOM
+        const container = document.getElementById('exercise-container');
+        const checkBtn = document.getElementById('check-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const playAudioBtn = document.getElementById('play-audio-btn');
+        const recordBtn = document.getElementById('record-btn');
+        const feedbackDiv = document.getElementById('feedback');
+        const scoreDisplay = document.getElementById('score-display');
+
+        // Tipos de ejercicio
+        const EXERCISE_TYPES = ['select', 'write', 'fillblank', 'reading', 'speaking'];
+
+        // Generar un ejercicio aleatorio
+        function generateExercise() {
+            const type = EXERCISE_TYPES[Math.floor(Math.random() * EXERCISE_TYPES.length)];
+            const item = vocabulary[Math.floor(Math.random() * vocabulary.length)];
+
+            switch(type) {
+                case 'select':
+                    return createSelectExercise(item);
+                case 'write':
+                    return createWriteExercise(item);
+                case 'fillblank':
+                    return createFillBlankExercise(item);
+                case 'reading':
+                    return createReadingExercise(item);
+                case 'speaking':
+                    return createSpeakingExercise(item);
+                default:
+                    return null;
+            }
+        }
+
+        function createSelectExercise(item) {
+            // Opciones: 3 traducciones incorrectas + la correcta
+            let options = [item.en];
+            while (options.length < 4) {
+                const randomItem = vocabulary[Math.floor(Math.random() * vocabulary.length)];
+                if (!options.includes(randomItem.en)) {
+                    options.push(randomItem.en);
+                }
+            }
+            options = shuffle(options);
+
+            return {
+                type: 'select',
+                prompt: `¿Qué significa <strong>${item.ru}</strong>?`,
+                audio: item.audio,
+                correct: item.en,
+                options: options,
+                check: function(selected) {
+                    return selected === this.correct;
+                }
+            };
+        }
+
+        function createWriteExercise(item) {
+            return {
+                type: 'write',
+                prompt: `Escribe en ruso: <strong>${item.en}</strong>`,
+                audio: item.audio,
+                correct: item.ru,
+                check: function(answer) {
+                    return answer.trim().toLowerCase() === this.correct.toLowerCase();
+                }
+            };
+        }
+
+        function createFillBlankExercise(item) {
+            // Frase sencilla con el hueco: "Я ___" para pronombres, etc.
+            // Por simplicidad, mostraremos solo la palabra en inglés y pedimos la rusa.
+            // También podemos crear frases contextuales pero eso requeriría más datos.
+            return {
+                type: 'fillblank',
+                prompt: `Completa: <strong>${item.en}</strong> → ____ (en ruso)`,
+                audio: item.audio,
+                correct: item.ru,
+                check: function(answer) {
+                    return answer.trim().toLowerCase() === this.correct.toLowerCase();
+                }
+            };
+        }
+
+        function createReadingExercise(item) {
+            return {
+                type: 'reading',
+                prompt: `Lee en voz alta: <strong>${item.ru}</strong>`,
+                audio: item.audio,
+                correct: item.ru,
+                check: function() {
+                    // No hay comprobación automática, solo autoevaluación
+                    return true;
+                }
+            };
+        }
+
+        function createSpeakingExercise(item) {
+            return {
+                type: 'speaking',
+                prompt: `Pronuncia en ruso: <strong>${item.ru}</strong> (traducción: ${item.en})`,
+                audio: item.audio,
+                correct: item.ru,
+                check: function(transcript) {
+                    if (!transcript) return false;
+                    return transcript.trim().toLowerCase() === this.correct.toLowerCase();
+                }
+            };
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function renderExercise(ex) {
+            currentExercise = ex;
+            userAnswer = null;
+            feedbackDiv.classList.remove('show', 'correct', 'incorrect');
+            checkBtn.disabled = false;
+            recordBtn.disabled = true; // por defecto, se habilita solo si es speaking
+
+            let html = `<div class="prompt">${ex.prompt}</div>`;
+
+            if (ex.type === 'select') {
+                html += `<ul class="options">`;
+                ex.options.forEach(opt => {
+                    html += `<li><button class="option-btn" data-value="${opt}">${opt}</button></li>`;
+                });
+                html += `</ul>`;
+            } else if (ex.type === 'write' || ex.type === 'fillblank') {
+                html += `<input type="text" id="text-answer" placeholder="Escribe aquí..." style="width:100%; padding:0.5rem; font-size:1rem;">`;
+            } else if (ex.type === 'reading' || ex.type === 'speaking') {
+                html += `<p>Escucha el audio y repite.</p>`;
+                if (ex.type === 'speaking') {
+                    recordBtn.disabled = false;
+                }
+            }
+
+            container.innerHTML = html;
+
+            // Eventos para opciones de selección
+            if (ex.type === 'select') {
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        // Quitar selección anterior
+                        document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+                        btn.classList.add('selected');
+                        userAnswer = btn.dataset.value;
+                    });
+                });
+            }
+
+            // Evento para entrada de texto
+            if (ex.type === 'write' || ex.type === 'fillblank') {
+                const input = document.getElementById('text-answer');
+                input.addEventListener('input', () => {
+                    userAnswer = input.value;
+                });
+            }
+
+            // Botón de audio
+            playAudioBtn.onclick = () => {
+                if (ex.audio) {
+                    const audio = new Audio('audio/' + ex.audio);
+                    audio.play();
+                }
+            };
+        }
+
+        function checkAnswer() {
+            if (!currentExercise) return;
+            let isCorrect = false;
+            let message = '';
+
+            if (currentExercise.type === 'select') {
+                if (userAnswer === null) {
+                    alert('Selecciona una opción');
+                    return;
+                }
+                isCorrect = currentExercise.check(userAnswer);
+                // Marcar visualmente
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    if (btn.dataset.value === currentExercise.correct) {
+                        btn.classList.add('correct');
+                    } else if (btn.dataset.value === userAnswer) {
+                        btn.classList.add('incorrect');
+                    }
+                });
+            } else if (currentExercise.type === 'write' || currentExercise.type === 'fillblank') {
+                if (!userAnswer || userAnswer.trim() === '') {
+                    alert('Escribe una respuesta');
+                    return;
+                }
+                isCorrect = currentExercise.check(userAnswer);
+            } else if (currentExercise.type === 'reading' || currentExercise.type === 'speaking') {
+                // Para speaking, si hay transcripción, comprobamos; si no, asumimos correcto (autoevaluación)
+                if (currentExercise.type === 'speaking' && currentExercise.transcript) {
+                    isCorrect = currentExercise.check(currentExercise.transcript);
+                } else {
+                    isCorrect = true; // autoevaluación
+                }
+            }
+
+            if (isCorrect) {
+                score++;
+                message = '¡Correcto!';
+                feedbackDiv.className = 'feedback correct show';
+            } else {
+                message = `Incorrecto. La respuesta correcta es: <strong>${currentExercise.correct}</strong>`;
+                feedbackDiv.className = 'feedback incorrect show';
+            }
+
+            totalAnswered++;
+            scoreDisplay.textContent = `Puntuación: ${score} / ${totalAnswered}`;
+            feedbackDiv.innerHTML = message;
+            checkBtn.disabled = true;
+        }
+
+        function nextExercise() {
+            const ex = generateExercise();
+            renderExercise(ex);
+        }
+
+        // Inicialización
+        nextBtn.addEventListener('click', nextExercise);
+        checkBtn.addEventListener('click', checkAnswer);
+
+        // Speech Recognition (si está disponible)
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'ru-RU';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                currentExercise.transcript = transcript;
+                document.getElementById('transcript')?.remove();
+                const p = document.createElement('p');
+                p.id = 'transcript';
+                p.innerHTML = `Has dicho: <strong>${transcript}</strong>`;
+                container.appendChild(p);
+                // Habilitar comprobación automática
+                checkBtn.disabled = false;
+            };
+
+            recognition.onerror = (event) => {
+                alert('Error en reconocimiento de voz: ' + event.error);
+            };
+
+            recordBtn.addEventListener('click', () => {
+                recognition.start();
+                recordBtn.disabled = true;
+            });
+
+            recognition.onend = () => {
+                recordBtn.disabled = false;
+            };
+        } else {
+            recordBtn.style.display = 'none';
+        }
+
+        // Cargar primer ejercicio
+        nextExercise();
+    </script>
+</body>
+</html>
