@@ -20,6 +20,8 @@
         .feedback.show{display:block}
         .feedback.correct{background:#d4edda;color:#155724}
         .feedback.incorrect{background:#f8d7da;color:#721c24}
+        .feedback.info{background:#fff3cd;color:#856404}
+        #record-btn.recording{background:#dc3545}
         .controls{display:flex;gap:.5rem;margin-top:1rem;flex-wrap:wrap;align-items:center}
         button{padding:.5rem 1rem;border:none;border-radius:4px;background:#007bff;color:white;cursor:pointer;font-size:1rem}
         button:disabled{background:#6c757d;cursor:not-allowed}
@@ -28,6 +30,9 @@
         #transcript{font-weight:bold}
         #topic-select{padding:.5rem;font-size:1rem;margin-right:.5rem}
         #rating{font-size:1.2rem;font-weight:bold;margin-top:.5rem}
+        .voice-warning{margin-top:1rem;padding:1rem;border:1px solid #e0b000;border-radius:8px;background:#fff8d6;color:#5f4b00}
+        .voice-warning strong{display:block;margin-bottom:.35rem}
+        .voice-warning p{margin:.25rem 0}
     </style>
 </head>
 <body>
@@ -70,6 +75,10 @@
         <button id="next-btn">Next exercise</button>
         <button id="play-audio-btn" class="icon-btn" title="Play audio">🔊</button>
         <button id="record-btn" disabled>🎤 Record</button>
+    </div>
+    <div id="voice-warning" class="voice-warning" style="display:none">
+        <strong>Voice checking is unavailable</strong>
+        <p>Your browser doesn't have the Voice API needed to check speaking exercises. Repeat the word aloud yourself, then continue. If you want automatic pronunciation correction, use Chrome.</p>
     </div>
     <div id="feedback" class="feedback"></div>
     <div id="rating"></div>
@@ -383,6 +392,21 @@
         const scoreDisplay = document.getElementById('score-display');
         const topicSelect = document.getElementById('topic-select');
         const ratingDiv = document.getElementById('rating');
+        const voiceWarning = document.getElementById('voice-warning');
+
+        let SpeechRecognitionCtor = null;
+        let hasSpeechRecognition = false;
+
+        try {
+            SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+            if (SpeechRecognitionCtor) {
+                const testRecognition = new SpeechRecognitionCtor();
+                hasSpeechRecognition = !!testRecognition;
+            }
+        } catch (error) {
+            SpeechRecognitionCtor = null;
+            hasSpeechRecognition = false;
+        }
 
         // These two only keep "seenIndices" in memory for the current session
         // (no localStorage), so this always runs safely wherever it's opened.
@@ -529,6 +553,8 @@
             ratingDiv.innerHTML = '';
             checkBtn.disabled = false;
             recordBtn.disabled = true;
+            recordBtn.classList.remove('recording');
+            recordBtn.textContent = hasSpeechRecognition ? '🎤 Record' : '✓ I repeated it';
 
             let html = `<div class="prompt">${ex.prompt}</div>`;
 
@@ -544,7 +570,8 @@
                 html += `<p>Listen to the audio and then speak.</p>`;
                 if (ex.type === 'speaking') {
                     recordBtn.disabled = false;
-                    checkBtn.disabled = true; // checked automatically via recording, not the Check button
+                    checkBtn.disabled = true;
+                    recordBtn.textContent = hasSpeechRecognition ? '🎤 Record' : '✓ I repeated it';
                 }
             }
 
@@ -661,60 +688,144 @@
 
             const percent = similarityPercentage(transcript, currentExercise.correct);
             const rating = getRating(percent);
-            const message = `You said: <strong>${transcript}</strong><br>
-                             Similarity: <strong>${percent}%</strong><br>
-                             Rating: <strong>${rating}</strong>`;
 
-            feedbackDiv.className = 'feedback show';
-            feedbackDiv.innerHTML = message;
-            ratingDiv.innerHTML = `<span style="font-size:2rem;">${rating}</span>`;
+            feedbackDiv.className = percent >= 70 ? 'feedback correct show' : 'feedback incorrect show';
+            feedbackDiv.innerHTML = '';
+
+            const said = document.createElement('div');
+            said.textContent = `You said: ${transcript}`;
+            const similarity = document.createElement('div');
+            similarity.innerHTML = `Similarity: <strong>${percent}%</strong>`;
+            const ratingText = document.createElement('div');
+            ratingText.innerHTML = `Rating: <strong>${rating}</strong>`;
+            feedbackDiv.append(said, similarity, ratingText);
+
+            ratingDiv.textContent = rating;
 
             const isCorrect = percent >= 70;
             if (isCorrect) score++;
             totalAnswered++;
             scoreDisplay.textContent = `Score: ${score} / ${totalAnswered}`;
             checkBtn.disabled = true;
+            recordBtn.disabled = true;
+        }
+
+        function completeSpeakingWithoutRecognition() {
+            if (!currentExercise || currentExercise.type !== 'speaking') return;
+
+            feedbackDiv.className = 'feedback info show';
+            feedbackDiv.innerHTML = '';
+
+            const message = document.createElement('div');
+            message.textContent = 'Repeat the word aloud and compare your pronunciation with the audio.';
+            const answer = document.createElement('div');
+            answer.innerHTML = `Correct word: <strong>${currentExercise.correct}</strong>`;
+            feedbackDiv.append(message, answer);
+
+            ratingDiv.textContent = 'Self-evaluation';
+            score++;
+            totalAnswered++;
+            scoreDisplay.textContent = `Score: ${score} / ${totalAnswered}`;
+            recordBtn.disabled = true;
+            checkBtn.disabled = true;
         }
 
         // Speech recognition setup
-        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            const recognition = new SpeechRecognition();
+        let recognition = null;
+        let recognitionRunning = false;
+        let recognitionTimeout = null;
+
+        if (hasSpeechRecognition && SpeechRecognitionCtor) {
+            try {
+                recognition = new SpeechRecognitionCtor();
+            } catch (error) {
+                recognition = null;
+                hasSpeechRecognition = false;
+            }
+        }
+
+        if (recognition) {
             recognition.lang = 'ru-RU';
             recognition.interimResults = false;
             recognition.maxAlternatives = 1;
+            recognition.continuous = false;
+
+            const resetRecognitionUI = () => {
+                recognitionRunning = false;
+                if (recognitionTimeout !== null) {
+                    clearTimeout(recognitionTimeout);
+                    recognitionTimeout = null;
+                }
+                recordBtn.disabled = !currentExercise || currentExercise.type !== 'speaking';
+                recordBtn.classList.remove('recording');
+                recordBtn.textContent = '🎤 Record';
+            };
+
+            recognition.onstart = () => {
+                recognitionRunning = true;
+                recordBtn.disabled = false;
+                recordBtn.classList.add('recording');
+                recordBtn.textContent = '⏹ Stop';
+
+                recognitionTimeout = setTimeout(() => {
+                    if (recognitionRunning) recognition.stop();
+                }, 15000);
+            };
 
             recognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript;
+                const transcript = event.results?.[0]?.[0]?.transcript?.trim();
+                if (!transcript || !currentExercise || currentExercise.type !== 'speaking') return;
+
                 currentExercise.transcript = transcript;
                 const old = document.getElementById('transcript');
                 if (old) old.remove();
                 const p = document.createElement('p');
                 p.id = 'transcript';
-                p.innerHTML = `You said: <strong>${transcript}</strong>`;
+                p.textContent = `You said: ${transcript}`;
                 container.appendChild(p);
 
-                if (currentExercise.type === 'speaking') {
-                    handleSpeakingResult(transcript);
-                } else {
-                    checkBtn.disabled = false;
-                }
+                handleSpeakingResult(transcript);
             };
 
             recognition.onerror = (event) => {
-                alert('Speech recognition error: ' + event.error);
+                resetRecognitionUI();
+
+                if (!currentExercise || currentExercise.type !== 'speaking') return;
+                if (event.error === 'aborted') return;
+
+                feedbackDiv.className = 'feedback incorrect show';
+                feedbackDiv.textContent = `Speech recognition error: ${event.error}. Try again.`;
+                recordBtn.disabled = false;
+            };
+
+            recognition.onend = resetRecognitionUI;
+
+            recognition.onspeechend = () => {
+                if (recognitionRunning) recognition.stop();
             };
 
             recordBtn.addEventListener('click', () => {
-                recognition.start();
-                recordBtn.disabled = true;
-            });
+                if (!currentExercise || currentExercise.type !== 'speaking') return;
 
-            recognition.onend = () => {
-                recordBtn.disabled = false;
-            };
+                if (recognitionRunning) {
+                    recognition.stop();
+                    return;
+                }
+
+                try {
+                    recognition.start();
+                } catch (error) {
+                    resetRecognitionUI();
+                    feedbackDiv.className = 'feedback incorrect show';
+                    feedbackDiv.textContent = `Could not start speech recognition: ${error.message || error}`;
+                }
+            });
         } else {
-            recordBtn.style.display = 'none';
+            voiceWarning.style.display = 'block';
+
+            recordBtn.addEventListener('click', () => {
+                completeSpeakingWithoutRecognition();
+            });
         }
 
         // Generates and displays a new exercise (this was the missing function)
