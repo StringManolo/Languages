@@ -374,8 +374,6 @@
         let currentTopic = 'all';
         let seenIndices = new Set();
 
-        const STORAGE_KEY = 'russianExercisesSeen';
-
         const container = document.getElementById('exercise-container');
         const checkBtn = document.getElementById('check-btn');
         const nextBtn = document.getElementById('next-btn');
@@ -386,20 +384,17 @@
         const topicSelect = document.getElementById('topic-select');
         const ratingDiv = document.getElementById('rating');
 
-        // Load seen indices from localStorage
+        // These two only keep "seenIndices" in memory for the current session
+        // (no localStorage), so this always runs safely wherever it's opened.
+        // If you host this file yourself outside of Claude, you can swap
+        // these back to localStorage.getItem/setItem (using a key like
+        // 'russianExercisesSeen') to remember seen words across sessions.
         function loadSeen() {
-            const stored = localStorage.getItem(STORAGE_KEY);
-            if (stored) {
-                try {
-                    seenIndices = new Set(JSON.parse(stored));
-                } catch (e) {
-                    seenIndices = new Set();
-                }
-            }
+            // seenIndices already starts empty; nothing to load.
         }
 
         function saveSeen() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify([...seenIndices]));
+            // No-op: seenIndices is already updated in place where it's used.
         }
 
         function getFilteredVocabulary() {
@@ -549,6 +544,7 @@
                 html += `<p>Listen to the audio and then speak.</p>`;
                 if (ex.type === 'speaking') {
                     recordBtn.disabled = false;
+                    checkBtn.disabled = true; // checked automatically via recording, not the Check button
                 }
             }
 
@@ -719,6 +715,12 @@
             };
         } else {
             recordBtn.style.display = 'none';
+        }
+
+        // Generates and displays a new exercise (this was the missing function)
+        function nextExercise() {
+            const ex = generateExercise();
+            renderExercise(ex);
         }
 
         // Topic selection
