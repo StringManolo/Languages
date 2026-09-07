@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Russian</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; }
+    h1, h2, h3, h4 { margin-top: 2rem; }
+    ul { list-style: none; padding-left: 0; }
+    li { padding: 0.25rem 0; }
+    .ru-item { cursor: pointer; font-size: 1.1rem; }
+    .ru-item:hover { color: #2563eb; text-decoration: underline; }
+    .icon-btn { background: none; border: none; cursor: pointer; font-size: 1rem; padding: 0 4px; vertical-align: middle; }
+    .icon-btn:hover { transform: scale(1.2); }
+    .ru-note { font-size: 0.85em; color: #666; }
+    .ru-note-block { margin: 1rem 0; padding: 0.5rem 1rem; border-left: 3px solid #ccc; background: #f9f9f9; font-size: 0.9em; color: #333; }
+    #click-hint { color: #666; font-style: italic; }
+  </style>
+</head>
+<body>
+
+    <audio id="audio-tts_ru_Ё" src="audio/tts_ru_Ё.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_А" src="audio/tts_ru_А.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_Б" src="audio/tts_ru_Б.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_В" src="audio/tts_ru_В.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_Г" src="audio/tts_ru_Г.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_Д" src="audio/tts_ru_Д.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_Е" src="audio/tts_ru_Е.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_Ж" src="audio/tts_ru_Ж.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_З" src="audio/tts_ru_З.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_И" src="audio/tts_ru_И.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_Й" src="audio/tts_ru_Й.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_К" src="audio/tts_ru_К.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_Л" src="audio/tts_ru_Л.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_М" src="audio/tts_ru_М.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_Н" src="audio/tts_ru_Н.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_О" src="audio/tts_ru_О.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_П" src="audio/tts_ru_П.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_Р" src="audio/tts_ru_Р.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_С" src="audio/tts_ru_С.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_Т" src="audio/tts_ru_Т.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_У" src="audio/tts_ru_У.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_Ф" src="audio/tts_ru_Ф.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_Х" src="audio/tts_ru_Х.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_Ц" src="audio/tts_ru_Ц.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_Ч" src="audio/tts_ru_Ч.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_Ш" src="audio/tts_ru_Ш.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_Щ" src="audio/tts_ru_Щ.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_Ъ" src="audio/tts_ru_Ъ.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_Ы" src="audio/tts_ru_Ы.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_Ь" src="audio/tts_ru_Ь.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_Э" src="audio/tts_ru_Э.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_Ю" src="audio/tts_ru_Ю.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_Я" src="audio/tts_ru_Я.mp3" preload="none"></audio>
+
+    <!-- Greeting audio files -->
+    <audio id="audio-tts_ru_Привет" src="audio/tts_ru_Привет.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_Здравствуйте" src="audio/tts_ru_Здравствуйте.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_Очень приятно" src="audio/tts_ru_Очень приятно.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_Как Ты" src="audio/tts_ru_Как Ты.mp3" preload="none"></audio>
+
+  <h3>1. Alphabet</h3>
+  <p id="click-hint">Click the &#128266; icon &mdash; or the letter itself &mdash; to hear each sound.</p>
+
+  <h5>Same pronunciation as in English</h5>
+  <ul>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_А')">А f<strong>a</strong>ther</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_А')" aria-label="Play А">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_К')">К <strong>k</strong>ind</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_К')" aria-label="Play К">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_М')">М <strong>m</strong>en</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_М')" aria-label="Play М">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_О')">О <strong>o</strong>ld</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_О')" aria-label="Play О">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Т')">Т <strong>t</strong>ake</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Т')" aria-label="Play Т">&#128266;</button></li>
+  </ul>
+
+  <h5>English letters but different sounds</h5>
+  <ul>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_В')">В <strong>V</strong>ibes</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_В')" aria-label="Play В">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Е')">Е <strong>Ye</strong>s</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Е')" aria-label="Play Е">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Н')">Н <strong>N</strong>ice</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Н')" aria-label="Play Н">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Р')">Р <strong>R</strong>ain <span class="ru-note">(roll it once, like in Spanish)</span></span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Р')" aria-label="Play Р">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_С')">С <strong>S</strong>un</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_С')" aria-label="Play С">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_У')">У S<strong>oo</strong>n</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_У')" aria-label="Play У">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Х')">Х <strong>H</strong>ello</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Х')" aria-label="Play Х">&#128266;</button></li>
+  </ul>
+
+  <h5>New letters with familiar sounds</h5>
+  <ul>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Б')">Б <strong>B</strong>aby</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Б')" aria-label="Play Б">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Г')">Г <strong>G</strong>ood</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Г')" aria-label="Play Г">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Д')">Д <strong>D</strong>ate</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Д')" aria-label="Play Д">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Ё')">Ё <strong>Yo</strong>ur</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Ё')" aria-label="Play Ё">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_З')">З <strong>Z</strong>odiac</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_З')" aria-label="Play З">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_И')">И M<strong>ee</strong>t</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_И')" aria-label="Play И">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Й')">Й To<strong>y</strong></span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Й')" aria-label="Play Й">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Л')">Л <strong>L</strong>ove</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Л')" aria-label="Play Л">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_П')">П <strong>P</strong>eople</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_П')" aria-label="Play П">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Ф')">Ф <strong>F</strong>ine</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Ф')" aria-label="Play Ф">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Э')">Э <strong>E</strong>dit</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Э')" aria-label="Play Э">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Ю')">Ю <strong>U</strong>niversity</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Ю')" aria-label="Play Ю">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Я')">Я <strong>Ya</strong>rd</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Я')" aria-label="Play Я">&#128266;</button></li>
+  </ul>
+
+  <h5>New letters and new sounds</h5>
+  <ul>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Ж')">Ж Plea<strong>s</strong>ure</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Ж')" aria-label="Play Ж">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Ц')">Ц I<strong>ts</strong></span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Ц')" aria-label="Play Ц">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Ч')">Ч <strong>Ch</strong>ips</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Ч')" aria-label="Play Ч">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Ш')">Ш <strong>sh</strong>ape</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Ш')" aria-label="Play Ш">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Щ')">Щ <strong>sh</strong>eep <span class="ru-note">(softer)</span></span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Щ')" aria-label="Play Щ">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Ъ')">Ъ <span class="ru-note">(hard sign – small pause, forces hard consonant and clear vowel)</span></span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Ъ')" aria-label="Play Ъ">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Ы')">Ы <span class="ru-note">(special sound: mouth position for “rule”, say “i” as in “sit”)</span></span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Ы')" aria-label="Play Ы">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Ь')">Ь <span class="ru-note">(soft sign – softens consonant and makes next vowel clearer)</span></span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Ь')" aria-label="Play Ь">&#128266;</button></li>
+  </ul>
+
+  <h3>Pronunciation</h3>
+  <h4>Rules</h4>
+  <ul>
+    <li>In Russian, you use the front part of your mouth, with your teeth closer together than in English.</li>
+    <li>There are 10 vowel letters, and they affect how the consonant before them is pronounced. There are hard and soft vowels.</li>
+  </ul>
+
+  <h5>Hard vowels</h5>
+  <ul>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_А')">А</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_А')" aria-label="Play А">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Э')">Э</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Э')" aria-label="Play Э">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Ы')">Ы</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Ы')" aria-label="Play Ы">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_О')">О</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_О')" aria-label="Play О">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_У')">У</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_У')" aria-label="Play У">&#128266;</button></li>
+  </ul>
+
+  <h5>Soft vowels</h5>
+  <ul>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Я')">Я</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Я')" aria-label="Play Я">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Е')">Е</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Е')" aria-label="Play Е">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_И')">И</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_И')" aria-label="Play И">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Ё')">Ё</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Ё')" aria-label="Play Ё">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Ю')">Ю</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Ю')" aria-label="Play Ю">&#128266;</button></li>
+  </ul>
+
+  <p>There are 6 consonant exceptions that are always hard or soft (ignoring the vowel rule).</p>
+
+  <h6>Always hard consonants</h6>
+  <ul>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Ж')">Ж</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Ж')" aria-label="Play Ж">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Ш')">Ш</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Ш')" aria-label="Play Ш">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Ц')">Ц</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Ц')" aria-label="Play Ц">&#128266;</button></li>
+  </ul>
+
+  <h6>Always soft consonants</h6>
+  <ul>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Ч')">Ч</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Ч')" aria-label="Play Ч">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Щ')">Щ</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Щ')" aria-label="Play Щ">&#128266;</button></li>
+      <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Й')">Й</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Й')" aria-label="Play Й">&#128266;</button></li>
+  </ul>
+
+  <h3>2. Greetings</h3>
+  <p>In the present tense there is no verb <strong>to be</strong>. For example if someone asks your name, in Russia you would say the equivalent to "I Alex". In Russian is "Я Алекс".</p>
+  <ul>
+      <li>
+        <span class="ru-item" onclick="playAudio('audio-tts_ru_Привет')">Привет (Hello, only for friends and known people) (Its pronounced as in <strong>Pre</strong>view, <strong>v</strong>et, <strong>Yet</strong>) (prevyet).</span>
+        <button class="icon-btn" onclick="playAudio('audio-tts_ru_Привет')" aria-label="Play Привет">&#128266;</button>
+      </li>
+      <li>
+        <span class="ru-item" onclick="playAudio('audio-tts_ru_Здравствуйте')">Здравствуйте (Hello, for strangers, older people, or formal situations) (Its pronounced as in <strong>Z</strong>oo, <strong>dr</strong>ive, f<strong>a</strong>ther, <strong>st</strong>op, <strong>v</strong>et, <strong>w</strong>e, s<strong>ee</strong>, <strong>t</strong>ea, <strong>ye</strong>t) (zdrahst-vwee-tye).</span>
+        <button class="icon-btn" onclick="playAudio('audio-tts_ru_Здравствуйте')" aria-label="Play Здравствуйте">&#128266;</button>
+      </li>
+      <li>
+        <span class="ru-item" onclick="playAudio('audio-tts_ru_Очень приятно')">Очень приятно (Nice to meet you) (Its pronounced as in g<strong>o</strong>, <strong>ch</strong>eese, y<strong>e</strong>t, <strong>n</strong>et, <strong>pre</strong>view, <strong>ya</strong>rd, s<strong>t</strong>op, <strong>n</strong>et, <strong>a</strong>bout) (oh-chen pree-yat-na).</span>
+        <button class="icon-btn" onclick="playAudio('audio-tts_ru_Очень приятно')" aria-label="Play Очень приятно">&#128266;</button>
+      </li>
+      <li>
+        <span class="ru-item" onclick="playAudio('audio-tts_ru_Как Ты')">Как Ты (How are you?) Remember no "To be", so, (How you?) (Its pronounced as in <strong>c</strong>ar, f<strong>a</strong>ther, <strong>k</strong>ey, <strong>t</strong>ea, b<strong>i</strong>t) (kahk tih).</span>
+        <button class="icon-btn" onclick="playAudio('audio-tts_ru_Как Ты')" aria-label="Play Как Ты">&#128266;</button>
+      </li>
+  </ul>
+
+  <div class="ru-note-block">
+    <strong>Note about vowel reduction:</strong> In Russian, vowels that are not emphasized change sound.
+    <ul style="list-style: disc; padding-left: 1.5rem; margin: 0.5rem 0;">
+      <li>O (not emphasized) sounds like "a" (as in "about")</li>
+      <li>E (not emphasized) sounds like "i" (as in "it")</li>
+      <li>Я (not emphasized) sounds like "i" (as in "it")</li>
+    </ul>
+    That's why the second part of "Очень" is pronounced "chin" instead of "chen". And that's why the final O in "приятно" is pronounced "a": (not "pree-yat-no").
+  </div>
+
+  <div class="ru-note-block">
+    <strong>Note about "Как ты":</strong> In Russian, "Как ты?" is informal. Only use it with friends, family, or people you know well. It is a genuine question, not a casual greeting like in English. With strangers, it sounds too familiar and personal — it's better to simply not ask.
+  </div>
+
+  <script>
+    function playAudio(id) {
+      var el = document.getElementById(id);
+      if (el) { el.currentTime = 0; el.play(); }
+    }
+  </script>
+</body>
+</html>
