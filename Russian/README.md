@@ -1,6 +1,8 @@
 ### 1. Alphabet
 
+<!--
 <span id="click-line" style="display:none;">Click on the 🔊 icon to listen to each sound.</span>
+-->
 
 ##### Same pronunciation as in English
 - А f**a**ther <audio controls src="audio/tts_ru_А.mp3"></audio>
@@ -42,10 +44,12 @@
 
 
 
-
+<!-- TODO: Check how to ejecute comments from githubpages
 
 <script>
   if (window.location.hostname.endsWith('.github.io')) {
     document.getElementById('click-line').style.display = 'inline';
   }
 </script>
+
+-->
