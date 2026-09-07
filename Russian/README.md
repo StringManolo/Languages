@@ -1,6 +1,7 @@
 ### 1. Alphabet
 
-Click on the 🔊 icon to listen to each sound.                   
+<span id="click-line" style="display:none;">Click on the 🔊 icon to listen to each sound.</span>
+
 ##### Same pronunciation as in English
 - А f**a**ther <audio controls src="audio/tts_ru_А.mp3"></audio>
 - К **k**ind <audio controls src="audio/tts_ru_К.mp3"></audio>
@@ -36,3 +37,15 @@ Click on the 🔊 icon to listen to each sound.
 ###### Always soft consonants
 - Ч <audio controls src="audio/tts_ru_Ч.mp3"></audio>                                    - Щ <audio controls src="audio/tts_ru_Щ.mp3"></audio>
 - Й <audio controls src="audio/tts_ru_Й.mp3"></audio>
+
+
+
+
+
+
+
+<script>
+  if (window.location.hostname.endsWith('.github.io')) {
+    document.getElementById('click-line').style.display = 'inline';
+  }
+</script>
