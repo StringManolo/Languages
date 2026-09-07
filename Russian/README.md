@@ -95,6 +95,9 @@ In the present tense there is no verb **to be**. For example if someone asks you
 >
 > And that's why the final O in "приятно" is pronounced "a": (not "pree-yat-no").
 
+- Как Ты (How are you?) Remember no "To be", so, (How you?) (Its pronounced as in **c**ar, f**a**ther, **k**ey, **t**ea, b**i**t) (kahk tih)
+> Note: In Russian, "Как ты?" is informal. Only use it with friends, family, or people you know well. It is a genuine question, not a casual greeting like in English. With strangers, it sounds too familiar and personal — it's better to simply not ask.
+
 
 
 
