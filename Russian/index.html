@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Russian Alphabet</title>
+  <title>Russian</title>
   <style>
     body { font-family: system-ui, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; }
     h1, h2, h3, h4 { margin-top: 2rem; }
@@ -14,6 +14,7 @@
     .icon-btn { background: none; border: none; cursor: pointer; font-size: 1rem; padding: 0 4px; vertical-align: middle; }
     .icon-btn:hover { transform: scale(1.2); }
     .ru-note { font-size: 0.85em; color: #666; }
+    .ru-note-block { margin: 1rem 0; padding: 0.5rem 1rem; border-left: 3px solid #ccc; background: #f9f9f9; font-size: 0.9em; color: #333; }
     #click-hint { color: #666; font-style: italic; }
   </style>
 </head>
@@ -52,6 +53,12 @@
     <audio id="audio-tts_ru_Э" src="audio/tts_ru_Э.mp3" preload="none"></audio>
     <audio id="audio-tts_ru_Ю" src="audio/tts_ru_Ю.mp3" preload="none"></audio>
     <audio id="audio-tts_ru_Я" src="audio/tts_ru_Я.mp3" preload="none"></audio>
+
+    <!-- Greeting audio files -->
+    <audio id="audio-tts_ru_Привет" src="audio/tts_ru_Привет.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_Здравствуйте" src="audio/tts_ru_Здравствуйте.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_Очень приятно" src="audio/tts_ru_Очень приятно.mp3" preload="none"></audio>
+    <audio id="audio-tts_ru_Как Ты" src="audio/tts_ru_Как Ты.mp3" preload="none"></audio>
 
   <h3>1. Alphabet</h3>
   <p id="click-hint">Click the &#128266; icon &mdash; or the letter itself &mdash; to hear each sound.</p>
@@ -145,6 +152,41 @@
       <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Щ')">Щ</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Щ')" aria-label="Play Щ">&#128266;</button></li>
       <li><span class="ru-item" onclick="playAudio('audio-tts_ru_Й')">Й</span> <button class="icon-btn" onclick="playAudio('audio-tts_ru_Й')" aria-label="Play Й">&#128266;</button></li>
   </ul>
+
+  <h3>2. Greetings</h3>
+  <p>In the present tense there is no verb <strong>to be</strong>. For example if someone asks your name, in Russia you would say the equivalent to "I Alex". In Russian is "Я Алекс".</p>
+  <ul>
+      <li>
+        <span class="ru-item" onclick="playAudio('audio-tts_ru_Привет')">Привет (Hello, only for friends and known people) (Its pronounced as in <strong>Pre</strong>view, <strong>v</strong>et, <strong>Yet</strong>) (prevyet).</span>
+        <button class="icon-btn" onclick="playAudio('audio-tts_ru_Привет')" aria-label="Play Привет">&#128266;</button>
+      </li>
+      <li>
+        <span class="ru-item" onclick="playAudio('audio-tts_ru_Здравствуйте')">Здравствуйте (Hello, for strangers, older people, or formal situations) (Its pronounced as in <strong>Z</strong>oo, <strong>dr</strong>ive, f<strong>a</strong>ther, <strong>st</strong>op, <strong>v</strong>et, <strong>w</strong>e, s<strong>ee</strong>, <strong>t</strong>ea, <strong>ye</strong>t) (zdrahst-vwee-tye).</span>
+        <button class="icon-btn" onclick="playAudio('audio-tts_ru_Здравствуйте')" aria-label="Play Здравствуйте">&#128266;</button>
+      </li>
+      <li>
+        <span class="ru-item" onclick="playAudio('audio-tts_ru_Очень приятно')">Очень приятно (Nice to meet you) (Its pronounced as in g<strong>o</strong>, <strong>ch</strong>eese, y<strong>e</strong>t, <strong>n</strong>et, <strong>pre</strong>view, <strong>ya</strong>rd, s<strong>t</strong>op, <strong>n</strong>et, <strong>a</strong>bout) (oh-chen pree-yat-na).</span>
+        <button class="icon-btn" onclick="playAudio('audio-tts_ru_Очень приятно')" aria-label="Play Очень приятно">&#128266;</button>
+      </li>
+      <li>
+        <span class="ru-item" onclick="playAudio('audio-tts_ru_Как Ты')">Как Ты (How are you?) Remember no "To be", so, (How you?) (Its pronounced as in <strong>c</strong>ar, f<strong>a</strong>ther, <strong>k</strong>ey, <strong>t</strong>ea, b<strong>i</strong>t) (kahk tih).</span>
+        <button class="icon-btn" onclick="playAudio('audio-tts_ru_Как Ты')" aria-label="Play Как Ты">&#128266;</button>
+      </li>
+  </ul>
+
+  <div class="ru-note-block">
+    <strong>Note about vowel reduction:</strong> In Russian, vowels that are not emphasized change sound.
+    <ul style="list-style: disc; padding-left: 1.5rem; margin: 0.5rem 0;">
+      <li>O (not emphasized) sounds like "a" (as in "about")</li>
+      <li>E (not emphasized) sounds like "i" (as in "it")</li>
+      <li>Я (not emphasized) sounds like "i" (as in "it")</li>
+    </ul>
+    That's why the second part of "Очень" is pronounced "chin" instead of "chen". And that's why the final O in "приятно" is pronounced "a": (not "pree-yat-no").
+  </div>
+
+  <div class="ru-note-block">
+    <strong>Note about "Как ты":</strong> In Russian, "Как ты?" is informal. Only use it with friends, family, or people you know well. It is a genuine question, not a casual greeting like in English. With strangers, it sounds too familiar and personal — it's better to simply not ask.
+  </div>
 
   <script>
     function playAudio(id) {
