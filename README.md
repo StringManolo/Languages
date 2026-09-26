@@ -13,7 +13,7 @@ Everything is published as static HTML on **GitHub Pages** and as `.apkg` files 
 | 🇷🇺 **Russian** | [Russian/](Russian/) · [Web version](https://stringmanolo.github.io/Languages/Russian/) | [Russian/Anki/](Russian/Anki/) | 🟢 Active |
 | More coming… | — | — | 🔜 Planned |
 
-> **Note:** Currently only Russian is available. Additional languages (Japanese, German, Italian…) will be added over time using the same structure.
+> **Note:** Currently only Russian is available. Additional languages (German, Italian, Spanish, Chinese…) will be added over time using the same structure.
 
 ---
 
