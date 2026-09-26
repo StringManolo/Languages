@@ -137,5 +137,4 @@ Suggestions, corrections, and new decks are welcome.
 - 📚 **Russian course:** [stringmanolo.github.io/Languages/Russian](https://stringmanolo.github.io/Languages/Russian/)
 - 🎴 **Anki decks:** [`anki_russian_decks` release](https://github.com/StringManolo/Languages/releases/tag/anki_russian_decks)
 - 🐛 **Issues:** [github.com/StringManolo/Languages/issues](https://github.com/StringManolo/Languages/issues)
-```
 
