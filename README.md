@@ -71,6 +71,7 @@ Highlights:
 - **Core5000** — 5,000 most frequent Russian words *(third-party)*
 - **LingoLlama** — 253 beginner sentences with audio *(third-party)*
 - **Numbers** — 0 to 1,000,000,000, skipping predictable combinations
+- **100Verbs** — 100 most used Verbs + conjugations **real neural audio**
 
 > All decks are compatible with **Anki Desktop**, **AnkiDroid** (Android), and **AnkiMobile** (iOS).
 
